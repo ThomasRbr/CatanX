@@ -1,0 +1,10 @@
+{
+  "id": "ck_wall_segment",
+  "file": "C:/Users/Thoma/Desktop/Programation/CatanX/apps/client/public/assets/models/pieces/cities-knights/ck_wall_segment.glb",
+  "triangles": 72,
+  "materials": 3,
+  "license": "Original CatanX \u2014 internal art (generated)",
+  "author": "CatanX Blender pipeline",
+  "category": "game_piece",
+  "budgetMax": 500
+}

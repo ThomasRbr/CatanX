@@ -1,0 +1,15 @@
+{
+  "id": "realistic_settlement_lod2",
+  "url": "/assets/models/realistic/realistic_settlement_lod2.glb",
+  "category": "buildings",
+  "lod": 2,
+  "footprint": 0.36,
+  "castsShadow": true,
+  "receivesShadow": true,
+  "license": "Original CatanX \u2014 generated internal art",
+  "author": "CatanX realistic Blender pipeline",
+  "triangles": 3904,
+  "materials": 8,
+  "source": "tools/blender/generators/generate_realistic_surface_batch.py",
+  "visualTier": "realistic"
+}

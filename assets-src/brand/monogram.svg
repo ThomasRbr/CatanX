@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="CatanX monogramme">
+  <defs>
+    <linearGradient id="mg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E8C878"/>
+      <stop offset="100%" stop-color="#C79A45"/>
+    </linearGradient>
+  </defs>
+  <polygon points="64,8 112,36 112,92 64,120 16,92 16,36" fill="#0C2421" stroke="url(#mg)" stroke-width="3.5"/>
+  <path d="M36 40 L92 88" stroke="#C79A45" stroke-width="11" stroke-linecap="round"/>
+  <path d="M92 40 L36 88" stroke="#F4E8C9" stroke-width="11" stroke-linecap="round"/>
+  <circle cx="64" cy="20" r="6" fill="#6B9E78"/>
+  <circle cx="102" cy="64" r="6" fill="#D4A84B"/>
+  <circle cx="64" cy="108" r="6" fill="#C4783A"/>
+  <circle cx="26" cy="64" r="6" fill="#7A9BB8"/>
+</svg>

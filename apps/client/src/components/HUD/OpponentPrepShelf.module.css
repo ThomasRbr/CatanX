@@ -1,0 +1,91 @@
+.shelf {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 22;
+  width: min(286px, calc(100vw - 32px));
+  pointer-events: auto;
+  overflow: hidden;
+  border: 1px solid rgba(255, 220, 158, 0.36);
+  border-radius: 13px;
+  background: linear-gradient(145deg, rgba(72, 42, 24, 0.93), rgba(27, 16, 10, 0.96));
+  color: #fff5df;
+  box-shadow:
+    0 15px 30px rgba(8, 4, 2, 0.34),
+    inset 0 1px 0 rgba(255, 255, 255, 0.13);
+}
+.shelf > button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 11px;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.shelf > button span {
+  display: grid;
+  gap: 1px;
+}
+.shelf > button small {
+  color: rgba(255, 245, 223, 0.62);
+  font-size: 8px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.shelf > button strong {
+  font-family: var(--font-display);
+  font-size: 13px;
+}
+.shelf > button b {
+  width: 22px;
+  height: 22px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.09);
+  color: #ffda83;
+}
+.recipes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  padding: 0 8px 8px;
+}
+.recipes > span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+  padding: 7px 6px;
+  border: 1px solid rgba(255, 224, 164, 0.13);
+  border-radius: 8px;
+  background: rgba(255, 244, 220, 0.06);
+}
+.recipes > span[data-ready='1'] {
+  border-color: rgba(31, 200, 196, 0.46);
+  background: rgba(31, 200, 196, 0.1);
+}
+.recipes strong {
+  font-size: 10px;
+}
+.recipes small {
+  color: rgba(255, 245, 223, 0.62);
+  font-size: 8px;
+  line-height: 1.2;
+}
+.recipes > span[data-ready='1'] small {
+  color: #78e8df;
+}
+.recipes p {
+  grid-column: 1/-1;
+  margin: 2px 2px 0;
+  color: rgba(255, 245, 223, 0.58);
+  font-size: 8px;
+  line-height: 1.3;
+}

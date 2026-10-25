@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" role="img" aria-label="Diorama CatanX">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1a4550"/>
+      <stop offset="55%" stop-color="#123832"/>
+      <stop offset="100%" stop-color="#0C2421"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="72%" cy="28%" r="35%">
+      <stop offset="0%" stop-color="#E8C878" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#102E2B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2a5a78"/>
+      <stop offset="100%" stop-color="#1a3d56"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#sky)"/>
+  <rect width="1600" height="900" fill="url(#sun)"/>
+  <ellipse cx="980" cy="640" rx="560" ry="170" fill="url(#water)" opacity="0.95"/>
+  <g transform="translate(980,500)">
+    <polygon points="0,-130 112,-65 112,65 0,130 -112,65 -112,-65" fill="#315A48" stroke="#C79A45" stroke-width="5"/>
+    <path d="M-74 -42 L74 42" stroke="#C79A45" stroke-width="16" stroke-linecap="round"/>
+    <path d="M74 -42 L-74 42" stroke="#F4E8C9" stroke-width="16" stroke-linecap="round"/>
+    <circle cx="0" cy="-98" r="11" fill="#6B9E78"/>
+    <circle cx="98" cy="0" r="11" fill="#D4A84B"/>
+    <circle cx="0" cy="98" r="11" fill="#C4783A"/>
+    <circle cx="-98" cy="0" r="11" fill="#7A9BB8"/>
+  </g>
+  <g opacity="0.55" fill="#4a7a55">
+    <ellipse cx="720" cy="580" rx="40" ry="18"/>
+    <ellipse cx="1180" cy="600" rx="50" ry="20"/>
+    <ellipse cx="860" cy="620" rx="28" ry="12"/>
+  </g>
+</svg>

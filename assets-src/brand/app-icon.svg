@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" role="img" aria-label="CatanX">
+  <rect width="128" height="128" rx="26" fill="#0C2421"/>
+  <polygon points="64,16 106,40 106,88 64,112 22,88 22,40" fill="#315A48" stroke="#C79A45" stroke-width="3.5"/>
+  <path d="M38 42 L90 86" stroke="#C79A45" stroke-width="12" stroke-linecap="round"/>
+  <path d="M90 42 L38 86" stroke="#F4E8C9" stroke-width="12" stroke-linecap="round"/>
+  <circle cx="64" cy="26" r="5" fill="#6B9E78"/>
+  <circle cx="98" cy="64" r="5" fill="#D4A84B"/>
+  <circle cx="64" cy="102" r="5" fill="#C4783A"/>
+  <circle cx="30" cy="64" r="5" fill="#7A9BB8"/>
+</svg>

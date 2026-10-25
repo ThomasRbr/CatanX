@@ -1,0 +1,13 @@
+node_modules
+dist
+coverage
+playwright-report
+test-results
+src/engine
+src/frontend
+src/types
+src/index.ts
+index.html
+vite.config.ts
+postcss.config.cjs
+tailwind.config.cjs

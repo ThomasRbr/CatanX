@@ -1,0 +1,197 @@
+.avatar {
+  position: relative;
+  isolation: isolate;
+  width: var(--avatar-size);
+  height: var(--avatar-size);
+  flex: 0 0 auto;
+  overflow: hidden;
+  border: max(2px, calc(var(--avatar-size) * 0.045)) solid rgba(247, 248, 252, 0.9);
+  border-radius: 31%;
+  background: linear-gradient(145deg, #1fc8c4, #0b1f38 72%);
+  box-shadow:
+    0 10px 25px rgba(3, 12, 24, 0.3),
+    inset 0 1px rgba(255, 255, 255, 0.5);
+}
+.avatar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.85;
+}
+.avatar[data-banner='tide']::before {
+  background:
+    radial-gradient(circle at 20% 20%, #7ff3e8 0 6%, transparent 7%),
+    repeating-radial-gradient(
+      ellipse at 0 100%,
+      transparent 0 12%,
+      rgba(255, 255, 255, 0.18) 13% 15%,
+      transparent 16% 24%
+    ),
+    linear-gradient(145deg, #1fc8c4, #17466b);
+}
+.avatar[data-banner='facets']::before {
+  background: conic-gradient(from 35deg at 55% 45%, #8b6cff, #ff6b5f, #ffcd4a, #1fc8c4, #8b6cff);
+}
+.avatar[data-banner='topography']::before {
+  background:
+    repeating-radial-gradient(
+      circle at 68% 35%,
+      transparent 0 9%,
+      rgba(255, 255, 255, 0.16) 10% 11%
+    ),
+    linear-gradient(145deg, #304a63, #0b1f38);
+}
+.avatar[data-banner='rays']::before {
+  background:
+    repeating-conic-gradient(
+      from 10deg at 20% 100%,
+      rgba(255, 255, 255, 0.14) 0 8deg,
+      transparent 8deg 18deg
+    ),
+    linear-gradient(145deg, #ffae42, #ff6b5f);
+}
+.avatar[data-banner='weave']::before {
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.12) 0 2px, transparent 2px 9px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.08) 0 2px, transparent 2px 11px),
+    #345743;
+}
+.avatar[data-banner='night']::before {
+  background:
+    radial-gradient(circle at 25% 20%, #fff 0 1%, transparent 2%),
+    radial-gradient(circle at 70% 28%, #fff 0 1%, transparent 2%),
+    radial-gradient(circle at 80% 8%, #ffcd4a 0 2%, transparent 3%),
+    linear-gradient(145deg, #26315e, #081426);
+}
+.avatar[data-banner='archipelago']::before {
+  background:
+    radial-gradient(ellipse at 22% 65%, #f2c875 0 9%, transparent 10%),
+    radial-gradient(ellipse at 72% 30%, #57c785 0 12%, transparent 13%),
+    radial-gradient(ellipse at 80% 78%, #f2c875 0 7%, transparent 8%),
+    linear-gradient(145deg, #2d9ca4, #0b3653);
+}
+.avatar[data-banner='harbor_lights']::before {
+  background:
+    radial-gradient(circle at 25% 28%, #ffcd4a 0 3%, transparent 4%),
+    radial-gradient(circle at 68% 22%, #ff6b5f 0 2%, transparent 3%),
+    linear-gradient(165deg, transparent 54%, rgba(31, 200, 196, 0.34) 55% 58%, transparent 59%),
+    linear-gradient(145deg, #1f3350, #071423);
+}
+.avatar[data-banner='aurora']::before {
+  background:
+    radial-gradient(ellipse at 30% 10%, rgba(114, 255, 205, 0.9), transparent 38%),
+    radial-gradient(ellipse at 80% 45%, rgba(139, 108, 255, 0.85), transparent 42%),
+    linear-gradient(145deg, #123f50, #151536);
+}
+.avatar[data-banner='sunrise']::before {
+  background:
+    radial-gradient(circle at 22% 84%, #ffe47b 0 13%, transparent 14%),
+    linear-gradient(165deg, transparent 49%, rgba(255, 255, 255, 0.18) 50% 52%, transparent 53%),
+    linear-gradient(145deg, #ffcd4a, #ff6b5f 50%, #6945a1);
+}
+.avatar[data-banner='terrazzo']::before {
+  background:
+    radial-gradient(ellipse at 20% 30%, #ff6b5f 0 4%, transparent 5%),
+    radial-gradient(ellipse at 70% 20%, #ffcd4a 0 5%, transparent 6%),
+    radial-gradient(ellipse at 75% 72%, #1fc8c4 0 6%, transparent 7%),
+    radial-gradient(ellipse at 35% 80%, #8b6cff 0 4%, transparent 5%), #e8ecf1;
+}
+.avatar[data-banner='blueprint']::before {
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.12) 1px, transparent 1px),
+    linear-gradient(145deg, #285c86, #0b2945);
+  background-size:
+    11px 11px,
+    11px 11px,
+    auto;
+}
+.avatar[data-frame='steel'] {
+  border-color: #aebdca;
+  border-radius: 24%;
+}
+.avatar[data-frame='turquoise'] {
+  border-color: #55e2d9;
+}
+.avatar[data-frame='coral'] {
+  border-color: #ff8a80;
+}
+.avatar[data-frame='violet'] {
+  border-color: #a994ff;
+}
+.avatar[data-frame='ceramic'] {
+  border-color: #f7f8fc;
+}
+.avatar[data-frame='obsidian'] {
+  border-color: #202735;
+  box-shadow:
+    0 0 0 2px #718095,
+    0 12px 28px rgba(0, 0, 0, 0.42);
+}
+.avatar[data-frame='solar'] {
+  border-color: #ffcd4a;
+}
+.avatar[data-frame='jade'] {
+  border-color: #57c785;
+}
+.avatar[data-frame='pearl'] {
+  border-color: #fff;
+  box-shadow:
+    0 0 0 2px rgba(149, 214, 255, 0.48),
+    0 10px 25px rgba(3, 12, 24, 0.3);
+}
+.avatar[data-frame='prism'] {
+  border-color: #d6a8ff;
+  box-shadow:
+    0 0 0 2px #74e9dc,
+    0 0 18px rgba(139, 108, 255, 0.48);
+}
+.avatar[data-aura='tide'] {
+  box-shadow:
+    0 0 22px rgba(31, 200, 196, 0.6),
+    0 10px 25px rgba(3, 12, 24, 0.3);
+}
+.avatar[data-aura='sunrise'] {
+  box-shadow:
+    0 0 24px rgba(255, 205, 74, 0.62),
+    0 10px 25px rgba(3, 12, 24, 0.3);
+}
+.avatar[data-aura='ember'] {
+  box-shadow:
+    0 0 22px rgba(255, 107, 95, 0.62),
+    0 10px 25px rgba(3, 12, 24, 0.3);
+}
+.avatar[data-aura='aurora'] {
+  box-shadow:
+    0 0 25px rgba(139, 108, 255, 0.65),
+    0 0 12px rgba(31, 200, 196, 0.6);
+}
+.avatar[data-aura='starlight'] {
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.28),
+    0 0 26px rgba(174, 194, 255, 0.6);
+}
+.portrait {
+  position: absolute;
+  inset: 4%;
+  width: 92%;
+  height: 96%;
+  filter: drop-shadow(0 7px 8px rgba(3, 12, 24, 0.25));
+}
+.emblem {
+  position: absolute;
+  right: 4%;
+  bottom: 4%;
+  display: grid;
+  place-items: center;
+  width: 30%;
+  height: 30%;
+  color: #0b1f38;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 40%;
+  background: #ffcd4a;
+  box-shadow:
+    0 5px 12px rgba(3, 12, 24, 0.3),
+    inset 0 1px rgba(255, 255, 255, 0.7);
+}

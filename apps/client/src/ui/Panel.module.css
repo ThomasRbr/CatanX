@@ -1,0 +1,44 @@
+.panel {
+  position: relative;
+  border-radius: var(--radius-lg, 20px);
+  border: 1px solid var(--panel-border, rgba(255,255,255,.18));
+  box-shadow:
+    var(--elevation-raised, 0 12px 28px -16px var(--panel-shadow, rgba(8, 14, 12, 0.55))),
+    inset 0 1px 0 rgba(255,255,255,.16);
+  padding: var(--space-lg, 16px);
+  font-family: var(--font-ui, 'Source Sans 3', sans-serif);
+  transition:
+    border-color var(--motion-panel, 320ms) ease,
+    box-shadow var(--motion-panel, 320ms) ease,
+    background-color var(--motion-panel, 320ms) ease;
+}
+
+.glass {
+  color: var(--ivory, #f7f8fc);
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.12), transparent 42%),
+    var(--panel-bg, rgba(11,31,56,.78));
+  backdrop-filter: blur(18px) saturate(130%);
+}
+
+.paper {
+  color: var(--ink, #172033);
+  background: var(--panel-ivory, rgba(247,248,252,.96));
+  box-shadow:
+    0 14px 28px -18px var(--panel-shadow, rgba(8, 14, 12, 0.55)),
+    inset 0 1px 0 rgba(255,255,255,.8);
+}
+
+.dock {
+  color: var(--ivory, #f7f8fc);
+  background: var(--panel-bg-strong, rgba(18,35,61,.92));
+  border-radius: var(--radius-md, 14px);
+  border-color: rgba(255,255,255,.22);
+  padding: var(--space-md, 12px) var(--space-lg, 16px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    transition: none;
+  }
+}

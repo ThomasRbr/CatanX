@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Rose des quatre saisons">
+  <circle cx="48" cy="48" r="44" fill="#0C2421" stroke="#C79A45" stroke-width="2.5"/>
+  <path d="M48 10 L60 40 L48 48 L36 40 Z" fill="#6B9E78"/>
+  <path d="M86 48 L56 60 L48 48 L56 36 Z" fill="#D4A84B"/>
+  <path d="M48 86 L36 56 L48 48 L60 56 Z" fill="#C4783A"/>
+  <path d="M10 48 L40 36 L48 48 L40 60 Z" fill="#7A9BB8"/>
+  <circle cx="48" cy="48" r="9" fill="#F4E8C9" stroke="#C79A45" stroke-width="1.5"/>
+</svg>

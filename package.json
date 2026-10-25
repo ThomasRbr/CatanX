@@ -1,0 +1,51 @@
+{
+  "name": "catanx",
+  "version": "1.0.0",
+  "description": "CatanX — prototype premium desktop",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @catanx/client --",
+    "server": "npm run start -w @catanx/server",
+    "server:online": "node scripts/start-mp-server.mjs",
+    "server:dev": "npm run dev -w @catanx/server",
+    "build": "npm run build -w @catanx/client",
+    "preview": "npm run preview -w @catanx/client --",
+    "typecheck": "tsc -b",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:e2e": "playwright test",
+    "sim:ck": "node scripts/ck-headless-batch.mjs",
+    "sim:ai-ladder": "node scripts/ai-ladder.mjs",
+    "budget": "node scripts/check-bundle-budget.mjs",
+    "export:glb": "node scripts/export-render3d-glb.mjs",
+    "assets:blender:check": "powershell -ExecutionPolicy Bypass -File tools/blender/check-blender.ps1",
+    "assets:blender:generate": "powershell -ExecutionPolicy Bypass -File tools/blender/generate-all.ps1",
+    "assets:blender:validate": "node scripts/validate-3d-assets.mjs",
+    "assets:blender:previews": "powershell -ExecutionPolicy Bypass -File tools/blender/render-previews.ps1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.39.1",
+    "@playwright/test": "^1.56.1",
+    "@testing-library/react": "^16.3.0",
+    "@types/node": "^25.5.0",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "eslint": "^9.39.1",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-refresh": "^0.4.24",
+    "globals": "^16.5.0",
+    "jsdom": "^27.2.0",
+    "prettier": "^3.6.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vitest": "^4.0.8"
+  }
+}

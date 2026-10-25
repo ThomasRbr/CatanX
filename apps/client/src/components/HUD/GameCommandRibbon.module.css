@@ -1,0 +1,60 @@
+.ribbon {
+  position: absolute;
+  left: 50%;
+  right: auto;
+  bottom: 12px;
+  transform: translateX(-50%);
+  padding: 8px 10px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  pointer-events: auto;
+  z-index: 40;
+  max-width: min(620px, calc(100vw - 64px));
+  border-radius: 20px;
+}
+
+.ribbonPlacement {
+  left: 50%;
+  bottom: 12px;
+}
+
+.primaryCta {
+  min-width: 206px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.spectator,
+.placement {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ivory);
+}
+
+.spectator span,
+.placement span {
+  font-size: 12px;
+  opacity: 0.82;
+}
+
+.menuWrap {
+  position: relative;
+}
+
+.menu {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  padding: 8px;
+  display: grid;
+  gap: 6px;
+  min-width: 190px;
+  z-index: 50;
+  background: rgba(18,35,61,.96) !important;
+  color: var(--ivory);
+  box-shadow: 0 16px 28px -12px var(--panel-shadow);
+}

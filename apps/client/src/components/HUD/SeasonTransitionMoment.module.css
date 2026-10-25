@@ -1,0 +1,165 @@
+.layer {
+  --season-main: #86d993;
+  --season-soft: #e8ffd9;
+  --season-deep: #173c2c;
+  position: absolute;
+  inset: 0;
+  z-index: 48;
+  overflow: hidden;
+  pointer-events: none;
+  color: #fffbed;
+  isolation: isolate;
+  animation: layerLife var(--season-duration, 6.4s) ease both;
+}
+
+.layer[data-season='summer'] { --season-main: #ffc84d; --season-soft: #fff0a6; --season-deep: #563110; }
+.layer[data-season='autumn'] { --season-main: #e77b3f; --season-soft: #ffd095; --season-deep: #4a1d15; }
+.layer[data-season='winter'] { --season-main: #9fdcf5; --season-soft: #edfaff; --season-deep: #17334d; }
+.layer[data-severity='severe'] { --season-main: #ff6c62; --season-soft: #ffd1b8; --season-deep: #42151a; }
+
+.wash {
+  position: absolute;
+  inset: 0;
+  z-index: -3;
+  background:
+    radial-gradient(circle at 50% 48%, transparent 22%, rgba(4,10,18,.22) 70%),
+    linear-gradient(105deg, color-mix(in srgb,var(--season-deep) 76%,transparent), transparent 45%, color-mix(in srgb,var(--season-main) 18%,transparent));
+  backdrop-filter: saturate(.72) brightness(.8);
+  animation: washIn var(--season-duration, 6.4s) ease both;
+}
+
+.horizon {
+  position: absolute;
+  top: 50%;
+  left: -20%;
+  right: -20%;
+  z-index: -2;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--season-main), var(--season-soft), var(--season-main), transparent);
+  box-shadow: 0 0 22px var(--season-main), 0 0 80px color-mix(in srgb,var(--season-main) 38%,transparent);
+  transform: scaleX(0);
+  animation: horizonOpen var(--season-duration, 6.4s) cubic-bezier(.18,.75,.2,1) both;
+}
+
+.announcement {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(690px, calc(100vw - 72px));
+  display: grid;
+  grid-template-columns: 72px minmax(180px, 1fr) minmax(220px, 1.1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 22px 24px;
+  border: 1px solid color-mix(in srgb,var(--season-main) 58%,rgba(255,255,255,.18));
+  border-radius: 22px;
+  background:
+    linear-gradient(115deg, rgba(7,14,20,.96), color-mix(in srgb,var(--season-deep) 88%,rgba(7,10,16,.95)) 64%, rgba(7,10,16,.95));
+  box-shadow: 0 28px 80px rgba(0,0,0,.56), inset 0 1px 0 rgba(255,255,255,.15), 0 0 60px color-mix(in srgb,var(--season-main) 12%,transparent);
+  transform: translate(-50%, -50%);
+  animation: announcementIn var(--season-duration, 6.4s) cubic-bezier(.16,.82,.2,1) both;
+}
+
+.announcement::before {
+  content: '';
+  position: absolute;
+  inset: 5px;
+  border: 1px solid color-mix(in srgb,var(--season-main) 18%,transparent);
+  border-radius: 16px;
+}
+
+.crest {
+  width: 64px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb,var(--season-main) 74%,white 12%);
+  border-radius: 50%;
+  color: #091016;
+  background: radial-gradient(circle at 35% 28%, var(--season-soft), var(--season-main) 64%, color-mix(in srgb,var(--season-main) 55%,black));
+  box-shadow: 0 0 0 7px color-mix(in srgb,var(--season-main) 10%,transparent), 0 0 30px color-mix(in srgb,var(--season-main) 32%,transparent);
+  animation: crestTurn var(--season-duration, 6.4s) ease both;
+}
+
+.heading, .climate { min-width: 0; display: grid; }
+.heading small { color: var(--season-main); font-size: 9px; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; }
+.heading strong { margin-top: 1px; font-family: var(--font-display); font-size: clamp(28px,4vw,45px); line-height: 1; letter-spacing: -.045em; text-shadow: 0 8px 24px rgba(0,0,0,.38); }
+.heading em { margin-top: 7px; color: rgba(255,251,237,.68); font-size: 11px; font-style: normal; }
+
+.climate { align-self: stretch; align-content: center; padding-left: 18px; border-left: 1px solid color-mix(in srgb,var(--season-main) 28%,transparent); }
+.severity { width: max-content; padding: 3px 7px; border: 1px solid color-mix(in srgb,var(--season-main) 42%,transparent); border-radius: 999px; color: var(--season-main); background: color-mix(in srgb,var(--season-main) 10%,transparent); font-size: 8px; font-weight: 900; letter-spacing: .11em; text-transform: uppercase; }
+.climate b { margin-top: 6px; overflow: hidden; font-family: var(--font-display); font-size: 20px; text-overflow: ellipsis; white-space: nowrap; }
+.climate p { margin: 4px 0 0; color: rgba(255,251,237,.7); font-size: 10px; line-height: 1.35; }
+
+.favored {
+  grid-column: 2 / -1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 11px;
+  border-top: 1px solid rgba(255,255,255,.09);
+}
+.favored > small { margin-right: 2px; color: rgba(255,251,237,.46); font-size: 8px; font-weight: 850; letter-spacing: .12em; text-transform: uppercase; }
+.favored > span { display: inline-flex; align-items: center; gap: 5px; padding: 5px 8px; border: 1px solid color-mix(in srgb,var(--season-main) 24%,transparent); border-radius: 8px; background: rgba(255,255,255,.045); }
+.favored b { font-size: 9px; font-weight: 780; }
+
+.particles { position: absolute; inset: 0; z-index: -1; overflow: hidden; }
+.particles i {
+  position: absolute;
+  top: -8%;
+  left: var(--particle-left);
+  width: 8px;
+  height: 8px;
+  border-radius: 60% 15% 60% 15%;
+  background: var(--season-main);
+  opacity: 0;
+  box-shadow: 0 0 9px color-mix(in srgb,var(--season-main) 45%,transparent);
+  animation: particleFall var(--season-duration, 6.4s) var(--particle-delay) linear both;
+}
+.layer[data-season='winter'] .particles i { border-radius: 50%; background: #effcff; }
+.layer[data-season='summer'] .particles i { width: 5px; height: 5px; border-radius: 50%; }
+.layer[data-severity='severe'] .particles i { width: 10px; height: 2px; border-radius: 99px; transform: rotate(-22deg); }
+
+.timeline {
+  position: absolute;
+  left: 50%;
+  bottom: 18%;
+  width: min(520px, 64vw);
+  height: 3px;
+  border-radius: 99px;
+  background: linear-gradient(90deg,var(--season-main),var(--season-soft));
+  box-shadow: 0 0 15px color-mix(in srgb,var(--season-main) 36%,transparent);
+  transform-origin: left;
+  animation: timelineRun var(--season-duration, 6.4s) linear both;
+}
+
+@keyframes layerLife { 0%,100% { visibility:hidden; } 1%,99% { visibility:visible; } }
+@keyframes washIn { 0%,100% { opacity:0; } 10%,84% { opacity:1; } }
+@keyframes horizonOpen { 0% { opacity:0; transform:scaleX(0); } 18%,75% { opacity:1; transform:scaleX(1); } 100% { opacity:0; transform:scaleX(.4); } }
+@keyframes announcementIn { 0% { opacity:0; transform:translate(-50%,-44%) scale(.88); } 14%,82% { opacity:1; transform:translate(-50%,-50%) scale(1); } 100% { opacity:0; transform:translate(-50%,-54%) scale(.98); } }
+@keyframes crestTurn { 0% { opacity:0; transform:rotate(-90deg) scale(.55); } 18%,82% { opacity:1; transform:rotate(0) scale(1); } 100% { opacity:0; transform:rotate(25deg) scale(.9); } }
+@keyframes particleFall { 0% { opacity:0; translate:0 -5vh; rotate:0deg; } 14% { opacity:.62; } 84% { opacity:.34; } 100% { opacity:0; translate:var(--particle-drift) 112vh; rotate:420deg; } }
+@keyframes timelineRun { 0% { transform:translateX(-50%) scaleX(0); opacity:0; } 12% { transform:translateX(-50%) scaleX(1); opacity:1; } 100% { transform:translateX(-50%) scaleX(0); opacity:0; } }
+
+.layer[data-motion='off'] { animation:none; }
+.layer[data-motion='off'] .wash { opacity:.82; animation:none; }
+.layer[data-motion='off'] .horizon, .layer[data-motion='off'] .particles { display:none; }
+.layer[data-motion='off'] .announcement { opacity:1; animation:none; }
+.layer[data-motion='off'] .crest { opacity:1; animation:none; }
+.layer[data-motion='off'] .timeline { animation:none; transform:translateX(-50%) scaleX(1); }
+
+@media (max-width: 720px) {
+  .announcement { width:calc(100vw - 24px); grid-template-columns:50px 1fr; gap:10px; padding:16px; }
+  .crest { width:46px; height:46px; }
+  .climate { grid-column:1 / -1; padding:10px 0 0; border-top:1px solid color-mix(in srgb,var(--season-main) 28%,transparent); border-left:0; }
+  .favored { grid-column:1 / -1; flex-wrap:wrap; }
+  .heading strong { font-size:29px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .layer, .wash, .horizon, .announcement, .crest, .particles i, .timeline { animation:none !important; }
+  .wash { opacity:.82; }
+  .horizon, .particles { display:none; }
+  .announcement { opacity:1; }
+  .timeline { transform:translateX(-50%) scaleX(1); }
+}

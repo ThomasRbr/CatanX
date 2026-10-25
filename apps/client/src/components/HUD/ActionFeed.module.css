@@ -1,0 +1,119 @@
+.feed {
+  position: absolute !important;
+  left: 14px;
+  bottom: 14px;
+  z-index: 24;
+  width: min(286px, calc(100vw - 28px));
+  padding: 7px;
+  pointer-events: auto;
+  color: #fff5df;
+  border: 1px solid rgba(255, 220, 158, 0.3);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(76, 43, 24, 0.91), rgba(28, 16, 10, 0.94));
+  box-shadow:
+    0 16px 28px -18px rgba(8, 4, 2, 0.82),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+.collapsed {
+  width: min(244px, calc(100vw - 28px));
+}
+.collapsed .list > :not(:first-child) {
+  display: none;
+}
+.expanded {
+  width: min(286px, calc(100vw - 28px));
+}
+
+.header {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 7px 1fr auto;
+  align-items: center;
+  gap: 7px;
+  padding: 2px 3px 6px;
+  color: inherit;
+  text-align: left;
+  font: inherit;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 224, 164, 0.14);
+  background: transparent;
+  cursor: pointer;
+}
+.header strong {
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.header small {
+  min-width: 18px;
+  height: 18px;
+  display: grid;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #ffda83;
+  font-size: 13px;
+  font-weight: 800;
+}
+.liveDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #1fc8c4;
+  box-shadow: 0 0 0 3px rgba(31, 200, 196, 0.14);
+}
+.list {
+  display: grid;
+  gap: 3px;
+  padding-top: 5px;
+}
+.entry,
+.latest {
+  display: grid;
+  grid-template-columns: 27px 1fr;
+  gap: 7px;
+  align-items: start;
+  padding: 5px 6px;
+  border-radius: 6px;
+}
+.entry {
+  opacity: 0.68;
+}
+.latest {
+  background: rgba(255, 220, 157, 0.09);
+  box-shadow: inset 2px 0 0 #1fc8c4;
+}
+.turn {
+  padding-top: 2px;
+  color: #ffcd4a;
+  font-size: 9px;
+  font-weight: 800;
+}
+.entry strong,
+.latest strong {
+  display: block;
+  color: #fff8e8;
+  font-size: 10px;
+  line-height: 1.15;
+}
+.entry p,
+.latest p {
+  margin: 2px 0 0;
+  overflow: hidden;
+  color: rgba(255, 245, 223, 0.78);
+  font-size: 10px;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .feed {
+    left: 8px;
+    bottom: 8px;
+    width: min(252px, calc(100vw - 16px));
+  }
+  .entry:nth-child(n + 4) {
+    display: none;
+  }
+}

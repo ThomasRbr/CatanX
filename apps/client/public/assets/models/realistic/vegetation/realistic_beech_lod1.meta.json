@@ -1,0 +1,11 @@
+{
+  "id": "realistic_beech_lod1",
+  "url": "/assets/models/realistic/vegetation/realistic_beech_lod1.glb",
+  "category": "vegetation",
+  "species": "beech",
+  "lod": 1,
+  "license": "Original CatanX \u2014 generated internal art",
+  "triangles": 364,
+  "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+  "visualTier": "realistic"
+}

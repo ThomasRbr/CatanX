@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 120" role="img" aria-label="CatanX">
+  <defs>
+    <linearGradient id="cxNexus" x1="0" y1="0" x2="1" y2="1">
+      <stop stop-color="#1FC8C4"/><stop offset=".48" stop-color="#76B7FF"/><stop offset="1" stop-color="#8B6CFF"/>
+    </linearGradient>
+  </defs>
+  <g transform="translate(12 12)">
+    <path d="M8 8h33l15 15v33L8 8Z" fill="url(#cxNexus)"/>
+    <path d="M64 8h33v33L49 89V56L64 41V8Z" fill="#FFCD4A"/>
+    <path d="M8 64 41 97H8V64Z" fill="#FF6B5F"/>
+    <path d="M64 56 97 23v74H64V56Z" fill="#1FC8C4"/>
+    <path d="M41 8 8 41V8h33Z" fill="#8B6CFF" opacity=".82"/>
+    <path d="M8 97h33L8 64v33Z" fill="#1FC8C4" opacity=".8"/>
+  </g>
+  <g fill="#F7F8FC" transform="translate(132 32)">
+    <path d="M33 3C13 3 0 17 0 38s13 35 33 35c12 0 22-4 30-12l-10-11c-5 5-11 8-19 8-12 0-20-8-20-20s8-20 20-20c8 0 14 3 19 8L63 15C55 7 45 3 33 3Z"/>
+    <path d="M76 28c5-6 12-9 21-9 14 0 23 9 23 25v27h-13v-6c-5 6-11 8-19 8-12 0-20-7-20-18 0-12 9-19 24-19h15v-1c0-6-4-10-12-10-6 0-11 2-15 6l-4-11Zm16 17c-7 0-11 3-11 9 0 5 4 8 10 8 9 0 16-6 16-14v-3H92Z"/>
+    <path d="M132 5h14v15h14v12h-14v20c0 5 2 8 7 8h7v12h-10c-11 0-18-7-18-19V32h-9V20h9V5Z"/>
+    <path d="M173 28c5-6 12-9 21-9 14 0 23 9 23 25v27h-13v-6c-5 6-11 8-19 8-12 0-20-7-20-18 0-12 9-19 24-19h15v-1c0-6-4-10-12-10-6 0-11 2-15 6l-4-11Zm16 17c-7 0-11 3-11 9 0 5 4 8 10 8 9 0 16-6 16-14v-3h-15Z"/>
+    <path d="M232 20h14v7c5-5 11-8 19-8 14 0 23 9 23 25v27h-14V46c0-9-4-14-12-14-9 0-16 6-16 17v22h-14V20Z"/>
+    <path d="M305 20h16l14 18 14-18h16l-22 26 24 25h-17l-15-17-15 17h-17l24-25-22-26Z" fill="#FFCD4A"/>
+  </g>
+</svg>

@@ -1,0 +1,62 @@
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  min-height: 22px;
+  padding: 2px 8px;
+  border-radius: var(--radius-sm, 8px);
+  border: 1px solid transparent;
+  font-family: var(--font-ui, 'Inter', sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.neutral {
+  color: var(--ivory, #f7f8fc);
+  background: rgba(255,255,255,.1);
+  border-color: rgba(255,255,255,.16);
+}
+
+.gold {
+  color: var(--ink, #1b1712);
+  background: var(--solar, #ffcd4a);
+  border-color: rgba(27, 23, 18, 0.25);
+}
+
+.season {
+  color: var(--ink, #1b1712);
+  background: var(--season-accent, var(--season-summer, #d4a84b));
+  border-color: rgba(27, 23, 18, 0.2);
+}
+
+.danger {
+  color: var(--ivory, #f7f8fc);
+  background: var(--coral, #ff6b5f);
+  border-color: rgba(27, 23, 18, 0.3);
+}
+
+.success {
+  color: var(--ivory, #f7f8fc);
+  background: var(--success, #57c785);
+  border-color: rgba(27, 23, 18, 0.25);
+}
+
+:global([data-season='spring']) .season {
+  --season-accent: var(--season-spring, #6b9e78);
+}
+
+:global([data-season='summer']) .season {
+  --season-accent: var(--season-summer, #d4a84b);
+}
+
+:global([data-season='autumn']) .season {
+  --season-accent: var(--season-autumn, #c4783a);
+}
+
+:global([data-season='winter']) .season {
+  --season-accent: var(--season-winter, #7a9bb8);
+}

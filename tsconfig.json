@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true
+  },
+  "files": [],
+  "references": [
+    { "path": "./packages/protocol" },
+    { "path": "./packages/engine" },
+    { "path": "./apps/client" }
+  ]
+}

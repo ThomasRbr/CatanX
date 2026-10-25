@@ -1,0 +1,134 @@
+[
+  {
+    "id": "realistic_spruce_lod0",
+    "url": "/assets/models/realistic/vegetation/realistic_spruce_lod0.glb",
+    "category": "vegetation",
+    "species": "spruce",
+    "lod": 0,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 620,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_spruce_lod1",
+    "url": "/assets/models/realistic/vegetation/realistic_spruce_lod1.glb",
+    "category": "vegetation",
+    "species": "spruce",
+    "lod": 1,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 236,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_spruce_lod2",
+    "url": "/assets/models/realistic/vegetation/realistic_spruce_lod2.glb",
+    "category": "vegetation",
+    "species": "spruce",
+    "lod": 2,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 104,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_pine_lod0",
+    "url": "/assets/models/realistic/vegetation/realistic_pine_lod0.glb",
+    "category": "vegetation",
+    "species": "pine",
+    "lod": 0,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 520,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_pine_lod1",
+    "url": "/assets/models/realistic/vegetation/realistic_pine_lod1.glb",
+    "category": "vegetation",
+    "species": "pine",
+    "lod": 1,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 204,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_pine_lod2",
+    "url": "/assets/models/realistic/vegetation/realistic_pine_lod2.glb",
+    "category": "vegetation",
+    "species": "pine",
+    "lod": 2,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 84,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_deciduous_lod0",
+    "url": "/assets/models/realistic/vegetation/realistic_deciduous_lod0.glb",
+    "category": "vegetation",
+    "species": "deciduous",
+    "lod": 0,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 2364,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_deciduous_lod1",
+    "url": "/assets/models/realistic/vegetation/realistic_deciduous_lod1.glb",
+    "category": "vegetation",
+    "species": "deciduous",
+    "lod": 1,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 364,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_deciduous_lod2",
+    "url": "/assets/models/realistic/vegetation/realistic_deciduous_lod2.glb",
+    "category": "vegetation",
+    "species": "deciduous",
+    "lod": 2,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 84,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_beech_lod0",
+    "url": "/assets/models/realistic/vegetation/realistic_beech_lod0.glb",
+    "category": "vegetation",
+    "species": "beech",
+    "lod": 0,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 2364,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_beech_lod1",
+    "url": "/assets/models/realistic/vegetation/realistic_beech_lod1.glb",
+    "category": "vegetation",
+    "species": "beech",
+    "lod": 1,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 364,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  },
+  {
+    "id": "realistic_beech_lod2",
+    "url": "/assets/models/realistic/vegetation/realistic_beech_lod2.glb",
+    "category": "vegetation",
+    "species": "beech",
+    "lod": 2,
+    "license": "Original CatanX \u2014 generated internal art",
+    "triangles": 84,
+    "source": "tools/blender/generators/generate_realistic_trees_batch.py",
+    "visualTier": "realistic"
+  }
+]

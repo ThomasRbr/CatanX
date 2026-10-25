@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+  <title>CatanX Next — symbole source</title>
+  <path fill="#1FC8C4" d="M14 14h42v42H14z"/>
+  <path fill="#FFCD4A" d="M72 14h42v42H72z"/>
+  <path fill="#FF6B5F" d="M14 72h42v42H14z"/>
+  <path fill="#8B6CFF" d="M72 72h42v42H72z"/>
+  <path fill="#F7F8FC" d="M56 14h16l14 22-22 28 22 28-14 22H56L42 92l22-28-22-28z"/>
+</svg>

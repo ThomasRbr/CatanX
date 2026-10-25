@@ -1,0 +1,27 @@
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.local
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*
+coverage/
+playwright-report/
+test-results/
+.vite/
+.cursor/
+.claude/
+*.tsbuildinfo
+
+# Sauvegardes locales CatanX
+catanx_save_*
+catanx_saves
+
+apps/server/data/rooms/*.json
+
+# Python
+__pycache__/
+*.pyc

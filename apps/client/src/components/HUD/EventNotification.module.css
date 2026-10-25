@@ -1,0 +1,79 @@
+.notification {
+  position: absolute;
+  top: 92px;
+  right: 14px;
+  z-index: 36;
+  width: auto;
+  min-width: 178px;
+  display: grid;
+  grid-template-columns: 34px 1fr 22px;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  pointer-events: auto;
+  overflow: hidden;
+  border: 1px solid rgba(255, 196, 112, .32);
+  border-radius: 13px;
+  color: #fff5df;
+  background:
+    radial-gradient(circle at 0 50%, rgba(255, 107, 95, .2), transparent 36%),
+    linear-gradient(135deg, rgba(64, 42, 31, .97), rgba(20, 17, 19, .98));
+  box-shadow: 0 14px 30px rgba(7, 3, 2, .4), inset 0 1px 0 rgba(255, 255, 255, .12);
+  cursor: pointer;
+  isolation: isolate;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.notification::after {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  z-index: -1;
+  border: 1px solid rgba(255, 234, 190, .06);
+  border-radius: 9px;
+}
+
+.notification:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255, 196, 112, .58);
+  box-shadow: 0 17px 34px rgba(7, 3, 2, .48), 0 0 22px rgba(255, 107, 95, .1);
+}
+
+.notification:focus-visible { outline: 2px solid #ffbf72; outline-offset: 3px; }
+
+.icon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 186, 104, .34);
+  border-radius: 10px;
+  color: #ffd08f;
+  background: linear-gradient(145deg, rgba(255, 122, 88, .22), rgba(255, 194, 101, .08));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .16), 0 0 14px rgba(255, 107, 95, .12);
+}
+
+.copy { min-width: 0; display: grid; gap: 1px; text-align: left; }
+.copy small { color: #ffb977; font-size: 7px; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
+.copy strong { overflow: hidden; font-size: 10px; letter-spacing: .02em; text-overflow: ellipsis; white-space: nowrap; }
+.count {
+  min-width: 21px;
+  height: 21px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255, 224, 170, .18);
+  border-radius: 999px;
+  color: #2a160d;
+  background: linear-gradient(145deg, #ffe09b, #ff9c62);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, .25);
+  font-size: 9px;
+  font-weight: 900;
+}
+
+@media (max-width: 760px) {
+  .notification { top: 74px; min-width: 0; grid-template-columns: 30px 19px; padding: 6px; }
+  .icon { width: 30px; height: 30px; }
+  .copy { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) { .notification { transition: none; } }

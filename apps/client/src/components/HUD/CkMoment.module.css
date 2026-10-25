@@ -1,0 +1,103 @@
+.moment {
+  --accent: #ffcd4a;
+  position: relative;
+  width: min(350px, calc(100vw - 36px));
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  overflow: hidden;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--accent) 55%, rgba(255, 255, 255, 0.18));
+  border-radius: 13px;
+  background:
+    linear-gradient(100deg, rgba(8,20,27,.97), rgba(11,17,22,.86) 68%, rgba(16,15,18,.78)),
+    url('/assets/ui/cities-knights/barbarian-siege-v1.webp') center / cover;
+  color: #fff5df;
+  box-shadow:
+    0 18px 34px rgba(8, 4, 2, 0.38),
+    inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  animation: ckMomentIn 2.7s ease both;
+  isolation: isolate;
+}
+.moment::after { content:''; position:absolute; inset:4px; z-index:-1; border:1px solid color-mix(in srgb,var(--accent) 18%,transparent); border-radius:9px; }
+.moment[data-kind='ship'] {
+  --accent: #ff6b5f;
+}
+.moment[data-kind='invasion-win'] {
+  --accent: #1fc8c4;
+}
+.moment[data-kind='invasion-loss'] {
+  --accent: #ff6b5f;
+}
+.moment[data-kind='progress'] {
+  --accent: #8b6cff;
+  background: linear-gradient(100deg, rgba(17,13,35,.96), rgba(13,15,26,.8)), url('/assets/ui/progress/politics-v1.webp') center / cover;
+}
+.icon {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  color: #20150e;
+  background: var(--accent);
+  font-size: 18px;
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--accent) 14%, transparent),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.icon svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+.moment > span:last-child {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+.moment small {
+  color: var(--accent);
+  font-size: 8px;
+  font-style: normal;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.moment strong {
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.moment em {
+  overflow: hidden;
+  color: rgba(255, 245, 223, 0.72);
+  font-size: 10px;
+  font-style: normal;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+@keyframes ckMomentIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.96);
+  }
+  12%,
+  82% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-3px) scale(0.99);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .moment {
+    animation: none;
+  }
+}

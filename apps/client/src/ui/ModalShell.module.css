@@ -1,0 +1,6 @@
+.backdrop { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: var(--space-xl); background: rgba(3,12,26,.7); backdrop-filter: blur(10px); }
+.dialog { width: min(520px, 100%); max-height: min(80vh,720px); display: flex; flex-direction: column; overflow: hidden; border-radius: 20px; border: 1px solid rgba(247,248,252,.28); background: rgba(247,248,252,.97); color: var(--ink); box-shadow: 0 28px 48px -24px rgba(0,0,0,.6); animation: modalIn var(--motion-panel) ease-out; }
+.header { display: flex; align-items: center; justify-content: space-between; gap: var(--space-md); padding: var(--space-md) var(--space-lg); border-bottom: 1px solid rgba(247,248,252,.16); background: var(--midnight); color: var(--ivory); }
+.title { margin: 0; font-family: var(--font-display); font-size: 18px; font-weight: 650; letter-spacing: -.02em; color: var(--ivory); }.body { padding: var(--space-lg); overflow: auto; font-family: var(--font-ui); font-size: 15px; line-height: 1.5; }
+@keyframes modalIn { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity:1; transform:none; } }
+@media (prefers-reduced-motion: reduce) { .dialog { animation:none; } }

@@ -1,0 +1,79 @@
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border-radius: var(--radius-md, 14px);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    transform var(--motion-feedback, 120ms) ease,
+    background-color var(--motion-feedback, 120ms) ease,
+    border-color var(--motion-feedback, 120ms) ease,
+    color var(--motion-feedback, 120ms) ease,
+    filter var(--motion-feedback, 120ms) ease;
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid var(--focus-ring, rgba(31,200,196,.95));
+  outline-offset: 2px;
+}
+
+.iconButton:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.sm {
+  width: 30px;
+  height: 30px;
+}
+
+.md {
+  width: 36px;
+  height: 36px;
+}
+
+.lg {
+  width: 44px;
+  height: 44px;
+}
+
+.lacquer {
+  color: var(--ivory, #f7f8fc);
+  background: rgba(18,35,61,.84);
+  border-color: rgba(255,255,255,.16);
+}
+
+.lacquer:hover:not(:disabled) {
+  border-color: var(--turquoise, #1fc8c4);
+  color: var(--turquoise, #1fc8c4);
+}
+
+.gold {
+  color: var(--ink, #1b1712);
+  background: linear-gradient(145deg, #fff2b7, var(--solar, #ffcd4a));
+  border-color: rgba(27, 23, 18, 0.3);
+}
+
+.gold:hover:not(:disabled) {
+  filter: brightness(1.05);
+}
+
+.ghost {
+  color: var(--ivory, #f7f8fc);
+  background: transparent;
+  border-color: transparent;
+}
+
+.ghost:hover:not(:disabled) {
+  background: rgba(255,255,255,.1);
+  border-color: rgba(255,255,255,.16);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .iconButton {
+    transition: none;
+  }
+}

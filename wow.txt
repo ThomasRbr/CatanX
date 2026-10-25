@@ -1,0 +1,23 @@
+CatanX — Restant critique (Diorama Réaliste)
+============================================
+
+Passe perf (anti-lag)
+---------------------
+[x] Grass/lawn densités Ultra ≈ −50% + tufts 5→3 planes
+[x] receiveShadow off sur micro-scatter (gros fill-rate)
+[x] Forest copies 2→1, scrub satellites ↓
+[x] Shadows: 4096→2048, décor cast lod0 only, wet rocks no cast
+[x] ContactShadows: 120@1024 → 24@512 → frames=1
+[x] DoF half-res + bokeh ↓ ; water 144→96→72 ; dpr profile ; ambient anim off H7
+
+Passe perf #2 (FPS interactif, look Ultra conservé)
+----------------------------------------------------
+[x] StaticShadowBake — shadow map figée après settle
+[x] Tree shadow proxies opaques (top ~38%, layer 1)
+[x] AdaptiveDpr + Ultra interactif DPR [1, 1.25] (capture=1 → [1.5, 2])
+[x] MSAA off si cinematic ; terrain biome-blend runtime 2k
+[x] Lawn FrontSide ; tufts Ultra 2.4→1.55 ; grass alphaTest ↑
+[x] SceneEnvironment lerp early-out ; scrub frustumCulled
+[x] e2e captures passent &capture=1 pour garder le supersample
+
+Mesure headed 1600×900 village cinematic : ~12 FPS → ~25–30 FPS

@@ -1,0 +1,114 @@
+.summary {
+  position: relative;
+  min-width: 210px;
+  max-width: min(560px, calc(100vw - 40px));
+  display: grid;
+  justify-items: center;
+  gap: 7px;
+  padding: 8px 11px 10px;
+  pointer-events: none;
+  border: 1px solid rgba(255, 226, 173, 0.52);
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(255, 244, 220, 0.97), rgba(225, 203, 165, 0.96));
+  color: #392313;
+  box-shadow:
+    0 16px 32px rgba(18, 9, 4, 0.28),
+    inset 0 1px 0 #fff;
+  animation: summaryIn 2.1s ease both;
+}
+.eyebrow {
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: #79502e;
+}
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+}
+.card {
+  min-width: 72px;
+  display: grid;
+  grid-template-columns: 14px auto;
+  grid-template-areas: 'dot gain' 'name name';
+  align-items: center;
+  justify-content: center;
+  gap: 1px 4px;
+  padding: 5px 7px;
+  border: 1px solid rgba(78, 45, 20, 0.16);
+  border-radius: 8px;
+  background: rgba(255, 252, 245, 0.74);
+  box-shadow:
+    0 3px 8px rgba(54, 29, 12, 0.08),
+    inset 0 1px 0 #fff;
+}
+.card i {
+  grid-area: dot;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #9a724d;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+.card strong {
+  grid-area: gain;
+  font-size: 13px;
+  color: #214e43;
+}
+.card small {
+  grid-area: name;
+  font-size: 9px;
+  font-weight: 750;
+  color: #5e422e;
+}
+.card[data-resource='wood'] i {
+  background: #3f8a56;
+}
+.card[data-resource='clay'] i {
+  background: #c55c43;
+}
+.card[data-resource='wheat'] i {
+  background: #e5ad31;
+}
+.card[data-resource='sheep'] i {
+  background: #83b95a;
+}
+.card[data-resource='ore'] i {
+  background: #7f8792;
+}
+.card[data-resource='cloth'] i {
+  background: #6baa78;
+}
+.card[data-resource='coin'] i {
+  background: #d6a834;
+}
+.card[data-resource='paper'] i {
+  background: #8c80d8;
+}
+.empty {
+  font-size: 12px;
+  color: #69503c;
+}
+@keyframes summaryIn {
+  0% {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.97);
+  }
+  12%,
+  82% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-3px) scale(0.99);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .summary {
+    animation: none;
+  }
+}

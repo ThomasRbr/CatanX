@@ -1,0 +1,6 @@
+.toast { display: inline-flex; align-items: flex-start; gap: 10px; max-width: 360px; padding: 10px 12px; border-radius: 12px; border: 1px solid rgba(247,248,252,.2); background: rgba(11,31,56,.88); color: var(--ivory); box-shadow: 0 14px 28px -18px rgba(0,0,0,.55); font-family: var(--font-ui); font-size: 14px; line-height: 1.4; backdrop-filter: blur(14px); }
+.icon { margin-top: 2px; flex-shrink: 0; }.message { flex: 1; }
+.info { border-color: color-mix(in srgb, var(--turquoise) 70%, transparent); }.info .icon { color: var(--turquoise); }
+.success { border-color: color-mix(in srgb, var(--success) 70%, transparent); }.success .icon { color: var(--success); }
+.warning { border-color: color-mix(in srgb, var(--solar) 72%, transparent); }.warning .icon { color: var(--solar); }
+.danger { border-color: color-mix(in srgb, var(--coral) 72%, transparent); }.danger .icon { color: var(--coral); }

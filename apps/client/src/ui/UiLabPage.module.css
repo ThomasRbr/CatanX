@@ -1,0 +1,324 @@
+.page {
+  min-height: 100%;
+  padding: 28px 32px 48px;
+  color: var(--ivory);
+  font-family: var(--font-ui);
+  background:
+    radial-gradient(
+      circle at 12% 0%,
+      color-mix(in srgb, var(--turquoise) 22%, transparent),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 88% 8%,
+      color-mix(in srgb, var(--violet) 24%, transparent),
+      transparent 40%
+    ),
+    linear-gradient(160deg, var(--midnight) 0%, #111b31 55%, var(--graphite) 100%);
+  transition:
+    background-color var(--motion-panel) ease,
+    color var(--motion-panel) ease;
+}
+
+.page[data-contrast='high'] {
+  --panel-border: rgba(247, 248, 252, 0.9);
+  filter: contrast(1.08);
+}
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 16px;
+}
+.eyebrow {
+  margin: 0 0 4px;
+  font-size: 12px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--turquoise);
+}
+.title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 40px);
+  letter-spacing: -0.04em;
+  color: var(--ivory);
+}
+.lede {
+  margin: 8px 0 0;
+  max-width: 52ch;
+  color: color-mix(in srgb, var(--ivory) 82%, transparent);
+  line-height: 1.45;
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+}
+.control {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--ivory);
+}
+.control select {
+  min-width: 140px;
+  border: 1px solid var(--panel-border);
+  border-radius: 10px;
+  background: rgba(11, 31, 56, 0.86);
+  color: var(--ivory);
+  padding: 7px 9px;
+}
+.controlCheck {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--ivory);
+}
+.motionNote {
+  margin: 0 0 28px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--turquoise);
+  background: rgba(247, 248, 252, 0.07);
+  color: color-mix(in srgb, var(--ivory) 88%, transparent);
+  font-size: 13px;
+  line-height: 1.45;
+}
+.motionNote code {
+  font-size: 12px;
+  color: var(--solar);
+}
+.section {
+  margin-bottom: 28px;
+}
+.section h2 {
+  margin: 0 0 12px;
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: -0.02em;
+  color: var(--ivory);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 520px;
+}
+.grid3 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.grid3 p {
+  margin: 6px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+  opacity: 0.9;
+}
+.iconGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(108px, 1fr));
+  gap: 8px;
+}
+.iconCell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 6px;
+  border-radius: 12px;
+  border: 1px solid var(--panel-border);
+  background: rgba(247, 248, 252, 0.07);
+  color: var(--ivory);
+  font-size: 11px;
+  cursor: default;
+}
+.tabPanel {
+  margin-top: 12px;
+}
+.toastRow {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.cardHandStage {
+  min-height: 620px;
+  padding: 24px;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  border: 1px solid rgba(225, 190, 130, 0.3);
+  border-radius: 20px;
+  background:
+    linear-gradient(rgba(18, 11, 8, 0.38), rgba(18, 11, 8, 0.5)),
+    repeating-linear-gradient(92deg, #51301e 0 5px, #382014 5px 11px, #613b25 11px 14px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 80px rgba(0, 0, 0, 0.34);
+}
+.cardHandStage > div {
+  display: grid;
+  justify-items: end;
+  gap: 8px;
+}
+.cardStageLabel {
+  color: rgba(255, 238, 203, 0.52);
+  font-size: 9px;
+  font-weight: 850;
+  letter-spacing: 0.12em;
+}
+.momentStage {
+  position: relative;
+  min-height: 470px;
+  margin-top: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(225, 190, 130, 0.3);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 50% 35%, rgba(31, 200, 196, 0.14), transparent 34%),
+    linear-gradient(rgba(18, 11, 8, 0.28), rgba(18, 11, 8, 0.5)),
+    repeating-linear-gradient(92deg, #51301e 0 5px, #382014 5px 11px, #613b25 11px 14px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 0 80px rgba(0, 0, 0, 0.34);
+}
+.tradeStage {
+  position: relative;
+  min-height: 430px;
+  margin-top: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(225, 190, 130, 0.3);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 76% 50%, rgba(31, 200, 196, 0.13), transparent 30%),
+    linear-gradient(rgba(18, 11, 8, 0.26), rgba(18, 11, 8, 0.52)),
+    repeating-linear-gradient(92deg, #51301e 0 5px, #382014 5px 11px, #613b25 11px 14px);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 0 80px rgba(0, 0, 0, 0.34);
+}
+.tradeStage > aside {
+  top: 28px;
+  right: 28px;
+  bottom: auto;
+}
+.profileStage {
+  display: grid;
+  grid-template-columns: minmax(300px, 390px) 1fr;
+  align-items: center;
+  gap: 28px;
+  min-height: 390px;
+  padding: 28px;
+  border: 1px solid rgba(225, 190, 130, 0.3);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 25% 20%, rgba(31, 200, 196, 0.14), transparent 34%),
+    linear-gradient(rgba(18, 11, 8, 0.26), rgba(18, 11, 8, 0.5)),
+    repeating-linear-gradient(92deg, #51301e 0 5px, #382014 5px 11px, #613b25 11px 14px);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 0 80px rgba(0, 0, 0, 0.34);
+}
+.avatarShelf {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  justify-content: center;
+  gap: 18px;
+}
+@media (max-width: 980px) {
+  .avatarShelf {
+    grid-template-columns: repeat(3, auto);
+  }
+}
+@media (max-width: 760px) {
+  .profileStage {
+    grid-template-columns: 1fr;
+  }
+}
+.incomingTradeStage {
+  position: relative;
+  min-height: 620px;
+  margin-top: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(225, 190, 130, 0.3);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 76% 50%, rgba(31, 200, 196, 0.13), transparent 30%),
+    linear-gradient(rgba(18, 11, 8, 0.26), rgba(18, 11, 8, 0.52)),
+    repeating-linear-gradient(92deg, #51301e 0 5px, #382014 5px 11px, #613b25 11px 14px);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 0 80px rgba(0, 0, 0, 0.34);
+}
+.turnPlannerStage {
+  position: relative;
+  min-height: 430px;
+  margin-top: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(225, 190, 130, 0.3);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 78% 38%, rgba(31, 200, 196, 0.16), transparent 31%),
+    linear-gradient(rgba(18, 11, 8, 0.28), rgba(18, 11, 8, 0.5)),
+    repeating-linear-gradient(92deg, #51301e 0 5px, #382014 5px 11px, #613b25 11px 14px);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 0 80px rgba(0, 0, 0, 0.34);
+}
+.resourceBarStage {
+  position: relative;
+  min-height: 150px;
+  margin-top: 12px;
+  padding: 24px;
+  overflow: hidden;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  border: 1px solid rgba(225, 190, 130, 0.3);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 82% 22%, rgba(31, 200, 196, 0.14), transparent 29%),
+    linear-gradient(rgba(18, 11, 8, 0.28), rgba(18, 11, 8, 0.5)),
+    repeating-linear-gradient(92deg, #51301e 0 5px, #382014 5px 11px, #613b25 11px 14px);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 0 80px rgba(0, 0, 0, 0.34);
+}
+.seasonWidgetStage {
+  position: relative;
+  min-height: 670px;
+  margin-top: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(225, 190, 130, 0.3);
+  border-radius: 20px;
+  background:
+    radial-gradient(circle at 18% 15%, rgba(31, 200, 196, 0.13), transparent 30%),
+    linear-gradient(rgba(18, 11, 8, 0.28), rgba(18, 11, 8, 0.5)),
+    repeating-linear-gradient(92deg, #51301e 0 5px, #382014 5px 11px, #613b25 11px 14px);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.12),
+    inset 0 0 80px rgba(0, 0, 0, 0.34);
+}
+.seasonWidgetStage > aside {
+  top: 26px;
+  left: 26px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .page {
+    transition: none;
+  }
+}

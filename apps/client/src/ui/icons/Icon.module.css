@@ -1,0 +1,10 @@
+.icon {
+  display: inline-block;
+  width: var(--icon-size, 20px);
+  height: var(--icon-size, 20px);
+  flex-shrink: 0;
+  vertical-align: middle;
+  color: currentColor;
+  fill: currentColor;
+  overflow: visible;
+}

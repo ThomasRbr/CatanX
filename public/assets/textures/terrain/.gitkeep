@@ -1,0 +1,2 @@
+# Les fichiers PNG de terrain peuvent être placés ici (ex. plains.png, forest.png).
+# En leur absence, TerrainRenderer génère des textures procédurales de secours.

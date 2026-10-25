@@ -1,0 +1,271 @@
+.card {
+  --identity-color: #4e9dff;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  gap: 14px;
+  width: min(390px, 100%);
+  padding: 18px;
+  color: #f7f8fc;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 24px;
+  background: linear-gradient(145deg, rgba(35, 47, 65, 0.97), rgba(11, 31, 56, 0.98));
+  box-shadow:
+    0 24px 54px rgba(3, 12, 24, 0.36),
+    inset 0 1px rgba(255, 255, 255, 0.12);
+}
+.card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: radial-gradient(
+    circle at 0 0,
+    color-mix(in srgb, var(--identity-color), transparent 65%),
+    transparent 48%
+  );
+}
+.card[data-material='paper'] {
+  background: linear-gradient(145deg, #31405a, #111e32 78%);
+  box-shadow:
+    0 24px 54px rgba(3, 12, 24, 0.36),
+    inset 0 0 40px rgba(255, 255, 255, 0.045);
+}
+.card[data-material='carbon'] {
+  background:
+    repeating-linear-gradient(45deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 7px),
+    repeating-linear-gradient(-45deg, rgba(255, 255, 255, 0.025) 0 2px, transparent 2px 7px),
+    linear-gradient(145deg, #2c3542, #090f19);
+}
+.card[data-material='ceramic'] {
+  background: linear-gradient(145deg, #334b63, #102a43 78%);
+  box-shadow:
+    0 24px 54px rgba(3, 12, 24, 0.36),
+    inset 0 2px rgba(255, 255, 255, 0.22);
+}
+.card[data-material='holographic'] {
+  background:
+    linear-gradient(
+      115deg,
+      rgba(31, 200, 196, 0.35),
+      transparent 33%,
+      rgba(139, 108, 255, 0.35) 58%,
+      rgba(255, 107, 95, 0.26)
+    ),
+    linear-gradient(145deg, #283a50, #101a2e);
+}
+.card[data-material='velvet'] {
+  background: radial-gradient(circle at 28% 20%, #394160, #15182b 56%, #080d18);
+}
+.card[data-aura='tide'] {
+  box-shadow:
+    0 24px 60px rgba(3, 12, 24, 0.42),
+    0 0 28px rgba(31, 200, 196, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.12);
+}
+.card[data-aura='sunrise'] {
+  box-shadow:
+    0 24px 60px rgba(3, 12, 24, 0.42),
+    0 0 28px rgba(255, 205, 74, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.12);
+}
+.card[data-aura='ember'] {
+  box-shadow:
+    0 24px 60px rgba(3, 12, 24, 0.42),
+    0 0 28px rgba(255, 107, 95, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.12);
+}
+.card[data-aura='aurora'] {
+  box-shadow:
+    0 24px 60px rgba(3, 12, 24, 0.42),
+    0 0 32px rgba(139, 108, 255, 0.24),
+    inset 0 1px rgba(255, 255, 255, 0.12);
+}
+.card[data-aura='starlight'] {
+  box-shadow:
+    0 24px 60px rgba(3, 12, 24, 0.42),
+    0 0 30px rgba(185, 205, 255, 0.22),
+    inset 0 1px rgba(255, 255, 255, 0.12);
+}
+.pattern {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  opacity: 0.12;
+  background: repeating-linear-gradient(
+    125deg,
+    transparent 0 16px,
+    #fff 17px 18px,
+    transparent 19px 33px
+  );
+  mask-image: linear-gradient(to bottom, #000, transparent 75%);
+}
+.card[data-banner='facets'] .pattern {
+  opacity: 0.18;
+  background: conic-gradient(from 35deg at 85% 15%, transparent, #8b6cff, transparent 22%, #ff6b5f, transparent 42%);
+}
+.card[data-banner='topography'] .pattern {
+  opacity: 0.18;
+  background: repeating-radial-gradient(circle at 78% 28%, transparent 0 18px, #fff 19px 20px);
+}
+.card[data-banner='rays'] .pattern {
+  opacity: 0.16;
+  background: repeating-conic-gradient(from 10deg at 0 100%, #fff 0 4deg, transparent 4deg 13deg);
+}
+.card[data-banner='weave'] .pattern {
+  opacity: 0.12;
+  background: repeating-linear-gradient(45deg, #fff 0 1px, transparent 1px 9px), repeating-linear-gradient(-45deg, #fff 0 1px, transparent 1px 11px);
+}
+.card[data-banner='night'] .pattern,.card[data-banner='harbor_lights'] .pattern {
+  opacity: 0.28;
+  background: radial-gradient(circle at 70% 18%, #ffcd4a 0 2px, transparent 3px), radial-gradient(circle at 82% 36%, #fff 0 1px, transparent 2px), radial-gradient(circle at 58% 27%, #fff 0 1px, transparent 2px);
+}
+.card[data-banner='archipelago'] .pattern {
+  opacity: 0.15;
+  background: radial-gradient(ellipse at 75% 28%, #57c785 0 11%, transparent 12%), radial-gradient(ellipse at 55% 72%, #ffcd4a 0 8%, transparent 9%);
+}
+.card[data-banner='aurora'] .pattern {
+  opacity: 0.24;
+  background: radial-gradient(ellipse at 70% 5%, #72ffcd, transparent 36%), radial-gradient(ellipse at 95% 45%, #8b6cff, transparent 42%);
+}
+.card[data-banner='sunrise'] .pattern {
+  opacity: 0.21;
+  background: repeating-conic-gradient(from 0deg at 92% 100%, #ffcd4a 0 5deg, transparent 5deg 16deg);
+}
+.card[data-banner='terrazzo'] .pattern {
+  opacity: 0.18;
+  background: radial-gradient(ellipse at 75% 20%, #ff6b5f 0 3%, transparent 4%), radial-gradient(ellipse at 60% 72%, #ffcd4a 0 4%, transparent 5%), radial-gradient(ellipse at 90% 60%, #1fc8c4 0 5%, transparent 6%);
+}
+.card[data-banner='blueprint'] .pattern {
+  opacity: 0.14;
+  background: linear-gradient(#fff 1px,transparent 1px),linear-gradient(90deg,#fff 1px,transparent 1px);
+  background-size: 16px 16px;
+}
+.identity {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 13px;
+}
+.names {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.names h3 {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #fff;
+  font:
+    750 clamp(17px, 3vw, 23px)/1.05 Sora,
+    sans-serif;
+  letter-spacing: -0.035em;
+}
+.title {
+  color: #8de5df;
+  font:
+    800 9px/1 Inter,
+    sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.civilization {
+  color: rgba(247, 248, 252, 0.62);
+  font:
+    600 11px/1.2 Inter,
+    sans-serif;
+}
+.heroEmblem {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  color: #0b1f38;
+  border-radius: 15px;
+  background: linear-gradient(145deg, #ffe077, #ffbe45);
+  box-shadow:
+    0 9px 20px rgba(255, 205, 74, 0.2),
+    inset 0 1px rgba(255, 255, 255, 0.65);
+}
+.card blockquote {
+  margin: 0;
+  padding: 11px 13px;
+  color: rgba(247, 248, 252, 0.78);
+  border-left: 2px solid var(--identity-color);
+  border-radius: 0 12px 12px 0;
+  background: rgba(247, 248, 252, 0.055);
+  font:
+    500 12px/1.45 Inter,
+    sans-serif;
+}
+.compact blockquote {
+  padding: 8px 10px;
+  font-size: 10px;
+}
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 7px;
+  margin: 0;
+}
+.stats div {
+  display: grid;
+  gap: 3px;
+  padding: 9px;
+  border-radius: 12px;
+  background: rgba(4, 14, 28, 0.32);
+}
+.stats dt {
+  color: rgba(247, 248, 252, 0.52);
+  font:
+    650 9px/1 Inter,
+    sans-serif;
+  text-transform: uppercase;
+}
+.stats dd {
+  margin: 0;
+  color: #fff;
+  font:
+    750 13px/1 Sora,
+    sans-serif;
+}
+.card footer {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(247, 248, 252, 0.55);
+  font:
+    600 9px/1 Inter,
+    sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.card footer i {
+  width: 13px;
+  height: 13px;
+  border: 2px solid rgba(255, 255, 255, 0.75);
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+}
+.compact {
+  width: 310px;
+  gap: 9px;
+  padding: 13px;
+  border-radius: 18px;
+}
+.compact .heroEmblem {
+  width: 34px;
+  height: 34px;
+  border-radius: 11px;
+}
+.compact .names h3 {
+  font-size: 16px;
+}
+.compact .stats {
+  gap: 5px;
+}
+.compact .stats div {
+  padding: 7px;
+}

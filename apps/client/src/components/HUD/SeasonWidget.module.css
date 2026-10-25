@@ -1,0 +1,840 @@
+.dock {
+  --season-accent: #57c785;
+  --season-art: url('/assets/ui/seasons/spring-v1.webp');
+  position: absolute;
+  top: 14px;
+  left: 250px;
+  z-index: 43;
+  width: 50px;
+  height: 50px;
+  pointer-events: auto;
+}
+.dock[data-season='summer'] {
+  --season-accent: #ffcd4a;
+  --season-art: url('/assets/ui/seasons/summer-v1.webp');
+}
+.dock[data-season='autumn'] {
+  --season-accent: #ff7c56;
+  --season-art: url('/assets/ui/seasons/autumn-v1.webp');
+}
+.dock[data-season='winter'] {
+  --season-accent: #76b7ff;
+  --season-art: url('/assets/ui/seasons/winter-v1.webp');
+}
+.dock[data-severity='severe'] {
+  --season-accent: #ff785b;
+}
+.dock[data-awaiting='true'] .launcher {
+  border-color: var(--season-accent);
+  animation: vigilPulse 2.2s ease-in-out infinite;
+}
+.dock[data-awaiting='true'] .severityDot {
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--season-accent) 20%, transparent),
+    0 0 18px var(--season-accent);
+}
+:global(.ui-layer:has([data-extension='cities-knights'])) .dock {
+  left: 250px;
+}
+
+.launcher {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid color-mix(in srgb, var(--season-accent) 52%, rgba(255, 255, 255, 0.24));
+  border-radius: 15px;
+  color: #fff8e8;
+  background:
+    linear-gradient(145deg, rgba(8, 13, 15, 0.12), rgba(8, 9, 12, 0.7)),
+    var(--season-art) center / cover no-repeat;
+  box-shadow:
+    0 12px 26px rgba(6, 3, 2, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.16),
+    0 0 22px color-mix(in srgb, var(--season-accent) 12%, transparent);
+  cursor: pointer;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease,
+    box-shadow 180ms ease;
+}
+.launcher::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  border: 1px solid color-mix(in srgb, var(--season-accent) 25%, transparent);
+  border-radius: 11px;
+  pointer-events: none;
+}
+.launcher:hover,
+.launcher[aria-expanded='true'] {
+  transform: translateY(2px);
+  border-color: var(--season-accent);
+  box-shadow:
+    0 14px 30px rgba(6, 3, 2, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2),
+    0 0 30px color-mix(in srgb, var(--season-accent) 25%, transparent);
+}
+.launcher:focus-visible {
+  outline: 2px solid var(--season-accent);
+  outline-offset: 4px;
+}
+.iconHalo {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  color: #fff;
+  background: rgba(5, 13, 16, 0.46);
+  box-shadow:
+    inset 0 1px rgba(255, 255, 255, 0.18),
+    0 4px 12px rgba(0, 0, 0, 0.28);
+  filter: drop-shadow(0 0 7px color-mix(in srgb, var(--season-accent) 42%, transparent));
+  backdrop-filter: blur(3px);
+}
+.severityDot {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  width: 11px;
+  height: 11px;
+  border: 2px solid #28170f;
+  border-radius: 50%;
+  background: var(--season-accent);
+  box-shadow:
+    0 0 0 3px color-mix(in srgb, var(--season-accent) 16%, transparent),
+    0 0 12px var(--season-accent);
+}
+.tooltip {
+  position: absolute;
+  top: calc(100% + 9px);
+  left: 50%;
+  width: max-content;
+  max-width: 210px;
+  display: grid;
+  gap: 1px;
+  padding: 6px 9px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-50%) translateY(-3px);
+  border: 1px solid rgba(255, 224, 164, 0.2);
+  border-radius: 7px;
+  background: rgba(28, 17, 12, 0.96);
+  color: #fff5df;
+  box-shadow: 0 9px 20px rgba(5, 2, 1, 0.38);
+  pointer-events: none;
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease,
+    visibility 140ms;
+}
+.tooltip small {
+  color: var(--season-accent);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.tooltip strong {
+  overflow: hidden;
+  max-width: 190px;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.launcher:hover .tooltip,
+.launcher:focus-visible .tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+.launcher[aria-expanded='true'] .tooltip {
+  display: none;
+}
+
+.panel {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  z-index: 2;
+  width: min(390px, calc(100vw - 28px));
+  max-height: calc(100vh - 88px);
+  overflow: auto;
+  display: grid;
+  gap: 9px;
+  padding: 12px;
+  border: 1px solid color-mix(in srgb, var(--season-accent) 42%, rgba(255, 255, 255, 0.14));
+  border-radius: 14px;
+  background:
+    radial-gradient(
+      circle at 85% 0,
+      color-mix(in srgb, var(--season-accent) 15%, transparent),
+      transparent 35%
+    ),
+    linear-gradient(145deg, rgba(58, 33, 21, 0.99), rgba(19, 13, 11, 0.99));
+  color: #fff4df;
+  box-shadow:
+    0 24px 52px rgba(5, 2, 1, 0.56),
+    inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(18px) saturate(125%);
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--season-accent) 45%, transparent) transparent;
+  animation: panelIn 180ms cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+.panelHeader {
+  position: relative;
+  isolation: isolate;
+  min-height: 166px;
+  margin: -12px -12px 0;
+  padding: 13px 13px 12px;
+  overflow: hidden;
+  display: grid;
+  align-content: end;
+  gap: 6px;
+  border-bottom: 1px solid color-mix(in srgb, var(--season-accent) 36%, rgba(255, 255, 255, 0.12));
+  border-radius: 13px 13px 10px 10px;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(4, 9, 12, 0.08) 8%,
+      rgba(7, 10, 12, 0.26) 43%,
+      rgba(10, 9, 10, 0.94) 94%
+    ),
+    var(--season-art) center / cover no-repeat;
+  box-shadow:
+    inset 0 -1px rgba(255, 255, 255, 0.08),
+    0 10px 24px rgba(2, 3, 5, 0.2);
+}
+.panelHeader::before {
+  content: '';
+  position: absolute;
+  inset: 7px;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--season-accent) 42%, rgba(255, 255, 255, 0.14));
+  border-radius: 9px;
+  box-shadow: inset 0 0 28px rgba(0, 0, 0, 0.18);
+}
+.dock[data-severity='severe'] .panelHeader::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(112deg, transparent 0 18px, rgba(255, 111, 80, 0.065) 19px 20px),
+    radial-gradient(circle at 82% 15%, rgba(255, 92, 63, 0.24), transparent 37%);
+  mix-blend-mode: screen;
+}
+.headerMeta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.headerMeta > span {
+  color: color-mix(in srgb, var(--season-accent) 80%, #fff);
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-shadow: 0 2px 7px #000;
+  text-transform: uppercase;
+}
+.climateTitleRow {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+.panelIcon {
+  flex: 0 0 auto;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--season-accent) 45%, rgba(255, 255, 255, 0.16));
+  border-radius: 12px;
+  color: color-mix(in srgb, var(--season-accent) 76%, #fff);
+  background:
+    radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.2), transparent 36%),
+    rgba(5, 15, 17, 0.52);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 8px 20px color-mix(in srgb, var(--season-accent) 12%, transparent);
+}
+.climateTitle {
+  min-width: 0;
+  display: grid;
+  justify-items: start;
+  gap: 3px;
+}
+.climateTitle strong {
+  min-width: 0;
+  overflow: hidden;
+  font-family: var(--font-display);
+  font-size: 20px;
+  text-shadow: 0 3px 10px #000;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.preparation p,
+.nextClimate p {
+  margin: 0;
+  color: rgba(255, 245, 223, 0.76);
+  font-size: 10px;
+  line-height: 1.4;
+}
+.roundStatus {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: rgba(255, 249, 237, 0.82);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.07em;
+  text-shadow: 0 2px 7px #000;
+  text-transform: uppercase;
+}
+.roundStatus strong {
+  color: #fff;
+  font-size: 10px;
+}
+.progress {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 4px;
+  margin-top: 2px;
+}
+.progress span {
+  height: 4px;
+  border-radius: 99px;
+  background: rgba(255, 246, 226, 0.12);
+}
+.progress span[data-active='true'] {
+  background: var(--season-accent);
+  box-shadow: 0 0 8px color-mix(in srgb, var(--season-accent) 55%, transparent);
+}
+.bonusRule {
+  display: grid;
+  gap: 7px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--season-accent) 22%, rgba(255, 255, 255, 0.08));
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--season-accent) 8%, rgba(0, 0, 0, 0.2));
+}
+.stepHeading {
+  display: grid;
+  grid-template-columns: 25px 1fr;
+  align-items: center;
+  gap: 8px;
+}
+.stepHeading > b,
+.stepNumber {
+  width: 25px;
+  height: 25px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--season-accent) 45%, rgba(255, 255, 255, 0.14));
+  border-radius: 8px;
+  color: #21130b;
+  background: var(--season-accent);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.35),
+    0 4px 12px color-mix(in srgb, var(--season-accent) 18%, transparent);
+  font-family: var(--font-display);
+  font-size: 12px;
+}
+.stepHeading > span {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+.stepHeading small {
+  color: color-mix(in srgb, var(--season-accent) 78%, #fff);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.stepHeading strong {
+  font-family: var(--font-display);
+  font-size: 12px;
+}
+.ruleHeading {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ruleHeading > span:last-child,
+.preparation > div > span,
+.nextClimateBody > span {
+  color: rgba(255, 245, 223, 0.58);
+  font-size: 8px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ruleIcon,
+.cardIcon {
+  display: grid;
+  place-items: center;
+  color: color-mix(in srgb, var(--season-accent) 78%, #fff);
+}
+.favoredResources {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 6px;
+}
+.favoredResources > span {
+  display: grid;
+  grid-template-columns: 25px 1fr;
+  align-items: center;
+  column-gap: 6px;
+  padding: 7px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #fff8e6;
+  background: rgba(255, 255, 255, 0.055);
+}
+.favoredResources > span > svg {
+  grid-row: 1 / 3;
+  color: var(--season-accent);
+}
+.favoredResources > span > small {
+  color: rgba(255, 245, 223, 0.45);
+  font-size: 7px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.favoredResources > span > strong {
+  font-size: 10px;
+}
+.favoredResources > small {
+  font-size: 8px;
+  text-transform: uppercase;
+  opacity: 0.48;
+}
+.plainRule {
+  margin: 0;
+  color: rgba(255, 245, 223, 0.68);
+  font-size: 9px;
+  line-height: 1.35;
+}
+.impactBoard {
+  display: grid;
+  gap: 7px;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.13);
+}
+.effectGrid {
+  display: grid;
+  gap: 6px;
+}
+.effectGroup {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 9px;
+  padding: 8px 9px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.16);
+}
+.effectGroup strong {
+  flex: 0 0 82px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 9px;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.effectGroup span {
+  flex: 1 1 160px;
+  padding: 5px 7px;
+  border-radius: 6px;
+  color: rgba(255, 245, 223, 0.9);
+  background: rgba(255, 255, 255, 0.045);
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.effectGroup[data-tone='positive'] {
+  border-color: rgba(102, 224, 213, 0.24);
+}
+.effectGroup[data-tone='positive'] strong {
+  color: #7fe5d9;
+}
+.effectGroup[data-tone='negative'] {
+  border-color: rgba(255, 130, 95, 0.27);
+}
+.effectGroup[data-tone='negative'] strong {
+  color: #ffad88;
+}
+.safetyNote {
+  color: rgba(255, 245, 223, 0.54);
+  font-size: 8px;
+}
+.preparation,
+.nextClimate {
+  display: grid;
+  gap: 8px;
+  padding: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 9px;
+  background: rgba(255, 255, 255, 0.018);
+}
+.preparation {
+  grid-template-columns: 25px 30px 1fr;
+  align-items: start;
+}
+.nextClimate {
+  grid-template-columns: 30px 1fr;
+}
+.cardIcon {
+  width: 30px;
+  height: 30px;
+  border: 1px solid color-mix(in srgb, var(--season-accent) 26%, rgba(255, 255, 255, 0.08));
+  border-radius: 9px;
+  background: color-mix(in srgb, var(--season-accent) 8%, rgba(0, 0, 0, 0.18));
+}
+.preparation > div,
+.nextClimateBody {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.preparation > div > strong,
+.nextClimate strong {
+  font-size: 11px;
+}
+.preparation em {
+  color: color-mix(in srgb, var(--season-accent) 72%, #fff);
+  font-size: 9px;
+  font-style: normal;
+  font-weight: 800;
+}
+.nextClimateBody > div {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.prepChoices {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: grid;
+  gap: 8px;
+  padding: 10px;
+  border: 1px solid color-mix(in srgb, var(--season-accent) 34%, rgba(255, 255, 255, 0.1));
+  border-radius: 11px;
+  background:
+    radial-gradient(circle at 90% 0, color-mix(in srgb, var(--season-accent) 14%, transparent), transparent 42%),
+    linear-gradient(145deg, rgba(19, 26, 29, 0.88), rgba(12, 10, 10, 0.92));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.vigilHeader {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+.vigilIcon {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--season-accent) 42%, rgba(255, 255, 255, 0.13));
+  border-radius: 10px;
+  color: var(--season-accent);
+  background: color-mix(in srgb, var(--season-accent) 9%, rgba(0, 0, 0, 0.24));
+}
+.vigilHeader > span:nth-child(2) {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+.vigilHeader small,
+.adaptationTargets > span {
+  color: color-mix(in srgb, var(--season-accent) 76%, #fff);
+  font-size: 7px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.vigilHeader strong {
+  font-family: var(--font-display);
+  font-size: 13px;
+}
+.vigilLead {
+  margin: 0;
+  color: rgba(255, 245, 223, 0.65);
+  font-size: 8px;
+  line-height: 1.4;
+}
+.prepGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5px;
+}
+.selectedPrepDetail {
+  min-height: 30px;
+  color: rgba(255, 245, 223, 0.68);
+  font-size: 9px;
+  line-height: 1.35;
+}
+.prepBtn {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 22px 1fr;
+  align-items: center;
+  gap: 6px;
+  padding: 7px;
+  border: 1px solid rgba(255, 220, 157, 0.25);
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.22);
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.prepBtn > span {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+.prepBtn strong {
+  font-size: 9px;
+}
+.prepBtn small {
+  overflow: hidden;
+  color: rgba(255, 245, 223, 0.5);
+  font-size: 7px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.prepBtn:hover {
+  border-color: rgba(255, 220, 157, 0.58);
+}
+.prepBtn[data-active='true'] {
+  border-color: var(--season-accent);
+  background: var(--season-accent);
+  color: #241309;
+  font-weight: 800;
+}
+.prepBtn[data-active='true'] small {
+  color: rgba(36, 19, 9, 0.65);
+}
+.prepBtn:last-child {
+  grid-column: 1 / -1;
+}
+.adaptationTargets {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 7px 8px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 9px;
+  background: rgba(0, 0, 0, 0.2);
+}
+.adaptationTargets > div {
+  display: flex;
+  gap: 4px;
+}
+.adaptationTargets button {
+  width: 29px;
+  height: 29px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.045);
+  cursor: pointer;
+}
+.adaptationTargets button:hover,
+.adaptationTargets button[data-active='true'] {
+  border-color: var(--season-accent);
+  color: #20150d;
+  background: var(--season-accent);
+  box-shadow: 0 5px 15px color-mix(in srgb, var(--season-accent) 18%, transparent);
+}
+.readyStrip {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding-top: 2px;
+  border-top: 1px solid rgba(255, 255, 255, 0.07);
+}
+.readyStrip span {
+  padding: 3px 6px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 99px;
+  color: rgba(255, 245, 223, 0.45);
+  background: rgba(0, 0, 0, 0.18);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.readyStrip span[data-ready='true'] {
+  border-color: rgba(95, 219, 190, 0.32);
+  color: #8de8d2;
+  background: rgba(31, 200, 196, 0.09);
+}
+.currentTarget {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: fit-content;
+  margin-top: 2px;
+  color: color-mix(in srgb, var(--season-accent) 78%, #fff);
+  font-size: 8px;
+  font-weight: 800;
+}
+.nextClimate {
+  --forecast-art: var(--season-art);
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 92px;
+  align-items: end;
+  background:
+    linear-gradient(
+      90deg,
+      rgba(12, 12, 13, 0.94),
+      rgba(12, 12, 13, 0.74) 67%,
+      rgba(12, 12, 13, 0.48)
+    ),
+    var(--forecast-art) center / cover no-repeat;
+}
+.nextClimate[data-season='spring'] {
+  --forecast-art: url('/assets/ui/seasons/spring-v1.webp');
+}
+.nextClimate[data-season='summer'] {
+  --forecast-art: url('/assets/ui/seasons/summer-v1.webp');
+}
+.nextClimate[data-season='autumn'] {
+  --forecast-art: url('/assets/ui/seasons/autumn-v1.webp');
+}
+.nextClimate[data-season='winter'] {
+  --forecast-art: url('/assets/ui/seasons/winter-v1.webp');
+}
+.nextClimate::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  z-index: -1;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 6px;
+  pointer-events: none;
+}
+.nextClimate[data-severe='true'] {
+  border-color: rgba(255, 120, 91, 0.42);
+}
+.nextClimate small {
+  color: #ffad88;
+  font-size: 9px;
+  font-weight: 750;
+}
+.forecastThreats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 3px;
+}
+.forecastThreats small {
+  padding: 4px 6px;
+  border: 1px solid rgba(255, 132, 98, 0.24);
+  border-radius: 6px;
+  color: #ffc0a0;
+  background: rgba(89, 27, 18, 0.28);
+  font-size: 8px;
+}
+@keyframes panelIn {
+  from {
+    opacity: 0;
+    transform: translateY(-7px) scale(0.98);
+    transform-origin: top left;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transform-origin: top left;
+  }
+}
+@keyframes vigilPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 12px 26px rgba(6, 3, 2, 0.42),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16),
+      0 0 18px color-mix(in srgb, var(--season-accent) 14%, transparent);
+  }
+  50% {
+    box-shadow:
+      0 14px 30px rgba(6, 3, 2, 0.48),
+      inset 0 1px 0 rgba(255, 255, 255, 0.18),
+      0 0 34px color-mix(in srgb, var(--season-accent) 38%, transparent);
+  }
+}
+@media (max-width: 900px) {
+  .dock {
+    top: 11px;
+  }
+  .panel {
+    max-height: calc(100vh - 82px);
+  }
+}
+@media (max-width: 620px) {
+  .dock {
+    left: auto;
+    right: 68px;
+    width: 44px;
+    height: 44px;
+  }
+  :global(.ui-layer:has([data-extension='underground-sky']):has([data-extension='cities-knights']))
+    .dock {
+    right: 118px;
+  }
+  .launcher {
+    width: 44px;
+    height: 44px;
+    border-radius: 13px;
+  }
+  .iconHalo {
+    width: 30px;
+    height: 30px;
+  }
+  .panel {
+    top: calc(100% + 8px);
+    left: auto;
+    right: -60px;
+    width: calc(100vw - 16px);
+    max-height: calc(100vh - 74px);
+  }
+  .vigilHeader {
+    grid-template-columns: 32px 1fr;
+  }
+  .vigilHeader > :last-child {
+    grid-column: 1 / -1;
+    justify-self: start;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .launcher,
+  .tooltip,
+  .panel,
+  .progress span {
+    animation: none !important;
+    transition: none !important;
+  }
+}

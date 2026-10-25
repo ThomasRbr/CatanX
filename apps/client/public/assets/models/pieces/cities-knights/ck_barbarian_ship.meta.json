@@ -1,0 +1,10 @@
+{
+  "id": "ck_barbarian_ship",
+  "file": "C:/Users/Thoma/Desktop/Programation/CatanX/apps/client/public/assets/models/pieces/cities-knights/ck_barbarian_ship.glb",
+  "triangles": 380,
+  "materials": 4,
+  "license": "Original CatanX \u2014 internal art (generated)",
+  "author": "CatanX Blender pipeline",
+  "category": "game_piece",
+  "budgetMax": 1200
+}
