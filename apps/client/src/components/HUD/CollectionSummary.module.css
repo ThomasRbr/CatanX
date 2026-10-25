@@ -17,7 +17,7 @@
   animation: summaryIn 2.1s ease both;
 }
 .eyebrow {
-  font-size: 9px;
+  font-size: 10.5px;
   font-weight: 900;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -55,12 +55,12 @@
 }
 .card strong {
   grid-area: gain;
-  font-size: 13px;
+  font-size: 14px;
   color: #214e43;
 }
 .card small {
   grid-area: name;
-  font-size: 9px;
+  font-size: 11.5px;
   font-weight: 750;
   color: #5e422e;
 }
@@ -89,7 +89,7 @@
   background: #8c80d8;
 }
 .empty {
-  font-size: 12px;
+  font-size: 13px;
   color: #69503c;
 }
 @keyframes summaryIn {

@@ -42,7 +42,9 @@ const TERRAIN_MACRO_ELEVATION: Partial<Record<TerrainType, number>> = {
   mountain: 0.36,
   goldmine: 0.32,
   volcano: 0.46,
-  glacier: 0.3,
+  // The ice cap comes from the alpine massif (masked to the hex interior);
+  // a high base only lifted the coastal rim into a white plateau.
+  glacier: 0.17,
   hill: 0.2,
   ruins: 0.095,
   forest: 0.075,

@@ -1036,6 +1036,12 @@ export function App() {
     document.body.classList.toggle('reduce-motion', reducedMotionSetting || prefersReducedMotion);
   }, [highContrast, prefersReducedMotion, reducedMotionSetting]);
 
+  // Drives the `zoom` of every interface layer (see index.css), menus included.
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    document.documentElement.style.setProperty('--ui-zoom', String(uiScale));
+  }, [uiScale]);
+
   const shellSeason = gameState?.season ?? 'spring';
   const shellUiScale =
     uiScale <= 0.9 ? '0.85' : uiScale >= 1.2 ? '1.25' : uiScale >= 1.05 ? '1.1' : '1';
@@ -2137,6 +2143,51 @@ export function App() {
                 activePlayerName={activePlayer?.name ?? currentPlayer.name}
               />
             </div>
+            {/* Advanced summaries flow under the players panel instead of sitting
+                at a fixed top that the (taller) players panel covered. */}
+            {showComplexHUD && (
+              <div className="hud-left-status-slot hud-left-systems-slot">
+                {gameState.config.enableTechTree && (
+                  <TechPanel
+                    currentResearch={currentPlayer.currentResearch}
+                    progress={currentPlayer.researchProgress}
+                    queue={currentPlayer.researchQueue}
+                    availableCount={activeTechCount}
+                    onOpen={() => openModal('tech-tree')}
+                  />
+                )}
+                {gameState.config.enableDiplomacy && (
+                  <DiplomacyPanel
+                    relationCount={diplomacyStats.relationCount}
+                    allies={diplomacyStats.allies}
+                    wars={diplomacyStats.wars}
+                    onOpen={() => openModal('diplomacy')}
+                  />
+                )}
+                {gameState.config.enableMilitary && (
+                  <MilitaryPanel
+                    totalUnits={currentPlayer.units.length}
+                    militaryStrength={currentPlayer.stats.militaryStrength}
+                    damagedUnits={damagedUnits}
+                  />
+                )}
+                {gameState.config.worldCouncil &&
+                  gameState.worldCouncil.active &&
+                  gameState.worldCouncil.currentResolution && (
+                    <CouncilPanel
+                      title={gameState.worldCouncil.currentResolution.title}
+                      options={gameState.worldCouncil.currentResolution.options}
+                      myVote={
+                        activePlayerId ? (gameState.worldCouncil.votes[activePlayerId] ?? null) : null
+                      }
+                      onVote={(optionId) => {
+                        actions.castCouncilVote(optionId);
+                        forceSync();
+                      }}
+                    />
+                  )}
+                </div>
+            )}
             {progressMoment &&
               displayPlayerId &&
               progressMoment.actorId !== displayPlayerId &&
@@ -3230,60 +3281,6 @@ export function App() {
                 citiesKnights={isCitiesKnightsEnabled(gameState)}
               />
             )}
-
-          {showComplexHUD && (
-            <div
-              style={{
-                position: 'absolute',
-                left: 12,
-                top: 126,
-                display: 'grid',
-                gap: 8,
-                width: 260,
-                pointerEvents: 'auto',
-              }}
-            >
-              {gameState.config.enableTechTree && (
-                <TechPanel
-                  currentResearch={currentPlayer.currentResearch}
-                  progress={currentPlayer.researchProgress}
-                  queue={currentPlayer.researchQueue}
-                  availableCount={activeTechCount}
-                  onOpen={() => openModal('tech-tree')}
-                />
-              )}
-              {gameState.config.enableDiplomacy && (
-                <DiplomacyPanel
-                  relationCount={diplomacyStats.relationCount}
-                  allies={diplomacyStats.allies}
-                  wars={diplomacyStats.wars}
-                  onOpen={() => openModal('diplomacy')}
-                />
-              )}
-              {gameState.config.enableMilitary && (
-                <MilitaryPanel
-                  totalUnits={currentPlayer.units.length}
-                  militaryStrength={currentPlayer.stats.militaryStrength}
-                  damagedUnits={damagedUnits}
-                />
-              )}
-              {gameState.config.worldCouncil &&
-                gameState.worldCouncil.active &&
-                gameState.worldCouncil.currentResolution && (
-                  <CouncilPanel
-                    title={gameState.worldCouncil.currentResolution.title}
-                    options={gameState.worldCouncil.currentResolution.options}
-                    myVote={
-                      activePlayerId ? (gameState.worldCouncil.votes[activePlayerId] ?? null) : null
-                    }
-                    onVote={(optionId) => {
-                      actions.castCouncilVote(optionId);
-                      forceSync();
-                    }}
-                  />
-                )}
-            </div>
-          )}
 
           {showComplexHUD && (
             <TileInfoPanel

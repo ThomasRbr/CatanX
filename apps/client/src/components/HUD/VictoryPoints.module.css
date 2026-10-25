@@ -16,13 +16,13 @@
 .identity { min-width:0; display:flex; align-items:center; gap:8px; }
 .identity i { width:31px; height:31px; display:grid; place-items:center; flex:0 0 auto; border:1px solid rgba(255,213,124,.24); border-radius:9px; color:#ffda83; background:linear-gradient(145deg,rgba(255,205,74,.16),rgba(139,108,255,.08)); font-style:normal; box-shadow:inset 0 1px 0 rgba(255,255,255,.13); }
 .identity > span { min-width:0; display:grid; gap:1px; }
-.identity small { color:#ffca73; font-size:7px; font-weight:900; letter-spacing:.13em; text-transform:uppercase; }
-.identity strong { overflow:hidden; color:#fff4df; font-size:10px; text-overflow:ellipsis; white-space:nowrap; }
+.identity small { color:#ffca73; font-size:10px; font-weight:900; letter-spacing:.13em; text-transform:uppercase; }
+.identity strong { overflow:hidden; color:#fff4df; font-size:12px; text-overflow:ellipsis; white-space:nowrap; }
 .score { display:flex; align-items:baseline; color:#ffda83; font-family:var(--font-display); }
 .score strong { font-size:20px; line-height:1; text-shadow:0 0 14px rgba(255,205,74,.22); }
-.score small { color:rgba(255,244,223,.64); font-size:10px; }
+.score small { color:rgba(255,244,223,.64); font-size:12px; }
 .track { position:relative; margin-top:9px; width:100%; height:7px; overflow:hidden; border:1px solid rgba(255,226,165,.14); border-radius:999px; background:rgba(5,8,12,.5); box-shadow:inset 0 1px 3px rgba(0,0,0,.44); }
 .fill { height:100%; border-radius:inherit; background:linear-gradient(90deg,#1fc8c4,#6f8ee8 56%,#ffcd4a); box-shadow:0 0 14px rgba(31,200,196,.42),inset 0 1px 0 rgba(255,255,255,.25); transition:width 540ms cubic-bezier(.2,.8,.2,1); }
-.rank { margin-top:6px; display:flex; align-items:center; justify-content:space-between; color:rgba(255,244,223,.55); font-size:8px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
-.rank strong { color:#c9bdff; font-size:9px; }
+.rank { margin-top:6px; display:flex; align-items:center; justify-content:space-between; color:rgba(255,244,223,.55); font-size:10px; font-weight:800; letter-spacing:.09em; text-transform:uppercase; }
+.rank strong { color:#c9bdff; font-size:11.5px; }
 @media (prefers-reduced-motion:reduce) { .fill { transition:none; } }

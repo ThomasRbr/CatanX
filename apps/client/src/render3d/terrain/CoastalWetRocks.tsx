@@ -44,7 +44,8 @@ export function CoastalWetRocks({ tiles, mapSeed, season = 'summer' }: CoastalWe
     const density = quality.id === 'ultra' ? 1.2 : quality.id === 'high' ? 1.0 : 0.7;
     const out: WetRockPlacement[] = [];
     for (const tile of tiles) {
-      if (isWaterTerrain(tile.terrain)) continue;
+      // Glacier shores get drifting pack ice (IceFloes) instead of brown boulders.
+      if (isWaterTerrain(tile.terrain) || tile.terrain === 'glacier') continue;
       const origin = cubeToWorld(tile.coord);
       for (let direction = 0; direction < 6; direction++) {
         const neighbor = tileMap.get(hexToId(hexNeighbor(tile.coord, direction as 0 | 1 | 2 | 3 | 4 | 5)));

@@ -93,7 +93,7 @@ export class AppErrorBoundary extends Component<AppErrorBoundaryProps, AppErrorB
     }
 
     return (
-      <div key={this.state.resetKey} style={{ width: '100%', height: '100%' }}>
+      <div key={this.state.resetKey} className="app-root" style={{ width: '100%', height: '100%' }}>
         {this.props.children}
       </div>
     );

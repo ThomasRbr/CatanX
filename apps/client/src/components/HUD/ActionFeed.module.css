@@ -3,7 +3,7 @@
   left: 14px;
   bottom: 14px;
   z-index: 24;
-  width: min(286px, calc(100vw - 28px));
+  width: min(304px, calc(100vw - 28px));
   padding: 7px;
   pointer-events: auto;
   color: #fff5df;
@@ -15,13 +15,13 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 .collapsed {
-  width: min(244px, calc(100vw - 28px));
+  width: min(260px, calc(100vw - 28px));
 }
 .collapsed .list > :not(:first-child) {
   display: none;
 }
 .expanded {
-  width: min(286px, calc(100vw - 28px));
+  width: min(304px, calc(100vw - 28px));
 }
 
 .header {
@@ -40,7 +40,7 @@
   cursor: pointer;
 }
 .header strong {
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.04em;
   text-transform: uppercase;
 }
@@ -52,7 +52,7 @@
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.1);
   color: #ffda83;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 800;
 }
 .liveDot {
@@ -70,14 +70,14 @@
 .entry,
 .latest {
   display: grid;
-  grid-template-columns: 27px 1fr;
+  grid-template-columns: 27px minmax(0, 1fr);
   gap: 7px;
   align-items: start;
   padding: 5px 6px;
   border-radius: 6px;
 }
 .entry {
-  opacity: 0.68;
+  opacity: 0.82;
 }
 .latest {
   background: rgba(255, 220, 157, 0.09);
@@ -86,14 +86,14 @@
 .turn {
   padding-top: 2px;
   color: #ffcd4a;
-  font-size: 9px;
+  font-size: 11.5px;
   font-weight: 800;
 }
 .entry strong,
 .latest strong {
   display: block;
   color: #fff8e8;
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.15;
 }
 .entry p,
@@ -101,7 +101,7 @@
   margin: 2px 0 0;
   overflow: hidden;
   color: rgba(255, 245, 223, 0.78);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;

@@ -58,7 +58,8 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 5px;
-  width: min(100%, 318px);
+  /* Same width as the card tray above, so the labels fit at a readable size. */
+  width: min(100%, 404px);
   padding: 6px;
   border: 1px solid rgba(255, 225, 169, 0.2);
   border-radius: 13px;
@@ -92,8 +93,8 @@
 .materialChip {
   position: relative;
   isolation: isolate;
-  min-width: 96px;
-  height: 38px;
+  min-width: 124px;
+  height: 44px;
   display: grid;
   grid-template-columns: 25px minmax(0, 1fr) 20px;
   align-items: center;
@@ -141,8 +142,8 @@
 .materialCopy { min-width: 0; display: grid; gap: 1px; }
 .materialCopy small,
 .materialCopy span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.materialCopy small { color: rgba(244, 255, 254, 0.58); font-size: 6px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
-.materialCopy span { color: #f7fffe; font-size: 8px; font-weight: 800; }
+.materialCopy small { color: rgba(244, 255, 254, 0.75); font-size: 9.5px; font-weight: 900; letter-spacing: 0.06em; text-transform: uppercase; }
+.materialCopy span { color: #f7fffe; font-size: 11px; font-weight: 800; }
 .materialChip strong { width: 20px; height: 20px; display: grid; place-items: center; border-radius: 50%; color: #102329; background: rgba(239, 255, 253, 0.94); font-size: 10px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28); }
 
 .commodityChip {
@@ -152,7 +153,7 @@
   align-items: center;
   gap: 4px;
   min-width: 0;
-  height: 38px;
+  height: 44px;
   padding: 4px 5px 4px 4px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -210,13 +211,13 @@
 
 .commodityCopy small {
   color: #fffdf5;
-  font-size: 7px;
+  font-size: 10px;
   font-weight: 900;
 }
 
 .commodityCopy span {
-  color: rgba(255, 255, 255, .59);
-  font-size: 6.5px;
+  color: rgba(255, 255, 255, .8);
+  font-size: 10px;
   font-weight: 700;
 }
 

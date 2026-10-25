@@ -218,7 +218,7 @@ export function DiplomacyModal({
                     color: '#fff',
                     borderRadius: 999,
                     padding: '2px 9px',
-                    fontSize: 11,
+                    fontSize: 12,
                     textTransform: 'capitalize',
                     fontWeight: 700,
                   }}
@@ -274,7 +274,7 @@ export function DiplomacyModal({
                         <div style={{ fontWeight: 700, fontSize: 12 }}>
                           {treatyLabel(treaty.type)}
                         </div>
-                        <div style={{ fontSize: 11, opacity: 0.82, marginTop: 2 }}>
+                        <div style={{ fontSize: 12, opacity: 0.82, marginTop: 2 }}>
                           Etabli tour {treaty.establishedTurn}
                           {turnsLeft === null
                             ? ' - permanent'

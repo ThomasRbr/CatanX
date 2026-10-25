@@ -100,14 +100,14 @@
 }
 .trigger small {
   color: rgba(255, 245, 222, 0.63);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
 .trigger strong {
   font-family: Sora, Inter, sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   letter-spacing: -0.02em;
 }
 .trigger > b {
@@ -121,21 +121,21 @@
   box-shadow:
     0 3px 8px rgba(0, 0, 0, 0.3),
     inset 0 1px 0 #fff1bd;
-  font-size: 11px;
+  font-size: 12.5px;
 }
 
 .popover {
   position: absolute;
   top: calc(100% + 9px);
   right: 0;
-  width: min(760px, calc(100vw - 32px));
+  width: min(800px, calc(100vw - 32px));
   max-height: min(620px, calc(100vh - 84px));
   overflow: hidden;
   border: 1px solid rgba(224, 200, 155, 0.4);
   border-radius: 20px;
   background:
-    linear-gradient(rgba(14, 10, 9, 0.91), rgba(14, 10, 9, 0.96)),
-    repeating-linear-gradient(91deg, #4c2d1d 0 3px, #2f1b13 3px 7px, #61402b 7px 9px);
+    radial-gradient(circle at 12% 0%, rgba(31, 200, 196, 0.14), transparent 44%),
+    linear-gradient(160deg, rgba(16, 36, 62, 0.97), rgba(8, 18, 34, 0.96));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.13),
     inset 0 0 80px rgba(0, 0, 0, 0.32),
@@ -173,7 +173,7 @@
   display: block;
   margin-bottom: 2px;
   color: #e1bd77;
-  font-size: 9px;
+  font-size: 10.5px;
   font-weight: 850;
   letter-spacing: 0.15em;
   text-transform: uppercase;
@@ -195,7 +195,7 @@
   border-radius: 999px;
   color: #a8fff4;
   background: rgba(31, 200, 196, 0.09);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: 0.07em;
   text-transform: uppercase;
@@ -231,7 +231,7 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.64),
     0 7px 16px rgba(31, 200, 196, 0.16);
-  font: 800 9px Sora, Inter, sans-serif;
+  font: 800 11.5px Sora, Inter, sans-serif;
   cursor: pointer;
 }
 
@@ -368,7 +368,7 @@
   justify-content: space-between;
   gap: 5px;
   color: color-mix(in srgb, var(--suit) 75%, #202735);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -379,7 +379,7 @@
   border-radius: 4px;
   color: #fff;
   background: #ff6b5f;
-  font-size: 7px;
+  font-size: 10.5px;
   font-style: normal;
 }
 
@@ -576,7 +576,7 @@
   min-height: 34px;
   color: #172231;
   font-family: Sora, Inter, sans-serif;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 800;
   line-height: 1.18;
   letter-spacing: -0.025em;
@@ -589,7 +589,7 @@
   padding-top: 8px;
   border-top: 1px solid color-mix(in srgb, var(--suit) 22%, transparent);
   color: #657080;
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 700;
 }
 
@@ -603,7 +603,7 @@
 
 .detailKicker {
   color: #e3bb6b;
-  font-size: 9px;
+  font-size: 10.5px;
   font-weight: 900;
   letter-spacing: 0.13em;
   text-transform: uppercase;
@@ -621,7 +621,7 @@
 .detail > p {
   margin: 0 0 15px;
   color: rgba(255, 245, 224, 0.72);
-  font-size: 11px;
+  font-size: 12.5px;
   line-height: 1.5;
 }
 
@@ -635,7 +635,7 @@
   display: block;
   margin-top: 10px;
   color: rgba(255, 241, 213, 0.62);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -650,7 +650,7 @@
   outline: none;
   color: #fff6e5;
   background: #28201c;
-  font-size: 10px;
+  font-size: 12px;
 }
 .field select:focus,
 .diceChoice select:focus {
@@ -666,7 +666,7 @@
 
 .boardTarget > span {
   color: rgba(255, 241, 213, 0.62);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 850;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -701,7 +701,7 @@
 .boardTargetButton strong {
   overflow: hidden;
   font:
-    750 10px/1.2 Sora,
+    750 12px/1.2 Sora,
     Inter,
     sans-serif;
   text-overflow: ellipsis;
@@ -710,7 +710,7 @@
 
 .boardTargetButton small {
   color: rgba(208, 248, 242, 0.58);
-  font-size: 8px;
+  font-size: 11px;
 }
 
 .boardTargetButton:hover:not(:disabled),
@@ -749,14 +749,14 @@
 
 .noTarget strong {
   font:
-    750 10px Sora,
+    750 12px Sora,
     Inter,
     sans-serif;
 }
 
 .noTarget small {
   color: rgba(255, 225, 220, 0.7);
-  font-size: 8px;
+  font-size: 11px;
   line-height: 1.45;
 }
 
@@ -774,7 +774,7 @@
   border-radius: 8px;
   color: rgba(255, 246, 229, 0.78);
   background: rgba(255, 255, 255, 0.055);
-  font-size: 9px;
+  font-size: 11.5px;
   font-weight: 750;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -794,8 +794,8 @@
 .or {
   display: block;
   margin: 9px 0 0;
-  color: rgba(255, 255, 255, 0.42);
-  font-size: 9px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 11.5px;
   text-align: center;
 }
 .diceChoice {
@@ -809,13 +809,13 @@
   display: grid;
   gap: 4px;
   color: rgba(255, 241, 213, 0.62);
-  font-size: 8px;
+  font-size: 10px;
   font-weight: 800;
   text-transform: uppercase;
 }
 .diceChoice > span {
   padding-bottom: 9px;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.7);
 }
 .diceChoice > strong {
   height: 35px;
@@ -825,7 +825,7 @@
   color: #23180c;
   background: #ffcd4a;
   font:
-    800 13px Sora,
+    800 14px Sora,
     sans-serif;
 }
 
@@ -841,7 +841,7 @@
     inset 0 1px 0 #fff3c2,
     0 6px 15px rgba(0, 0, 0, 0.25);
   font:
-    800 10px Sora,
+    800 12px Sora,
     Inter,
     sans-serif;
   cursor: pointer;
@@ -867,14 +867,14 @@
   border-radius: 9px;
   color: #c9ffec;
   background: rgba(49, 177, 137, 0.12);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 750;
 }
 .lockNote {
   display: block;
   margin-top: 8px;
   color: #ffb8ae;
-  font-size: 9px;
+  font-size: 11.5px;
   line-height: 1.4;
 }
 
@@ -885,8 +885,8 @@
   align-items: center;
   justify-content: space-between;
   border-top: 1px solid rgba(235, 211, 169, 0.13);
-  color: rgba(255, 241, 215, 0.48);
-  font-size: 9px;
+  color: rgba(255, 241, 215, 0.7);
+  font-size: 11.5px;
 }
 .popover footer kbd {
   padding: 3px 6px;
@@ -918,7 +918,7 @@
   .trigger > b {
     width: 20px;
     height: 20px;
-    font-size: 9px;
+    font-size: 11.5px;
   }
   .popover {
     width: calc(100vw - 16px);

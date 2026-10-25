@@ -229,24 +229,24 @@ export function TechTreeModal({ player, onResearch, onClose }: TechTreeModalProp
                     >
                       <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
                         <div style={{ fontWeight: 800, fontSize: 12 }}>{tech.name}</div>
-                        <div style={{ fontSize: 11, opacity: 0.9 }}>{tech.cost}</div>
+                        <div style={{ fontSize: 12, opacity: 0.9 }}>{tech.cost}</div>
                       </div>
-                      <div style={{ marginTop: 4, fontSize: 11, opacity: 0.9 }}>
+                      <div style={{ marginTop: 4, fontSize: 12, opacity: 0.9 }}>
                         {tech.description}
                       </div>
-                      <div style={{ marginTop: 5, fontSize: 10, opacity: 0.86 }}>
+                      <div style={{ marginTop: 5, fontSize: 11.5, opacity: 0.86 }}>
                         Prerequis:{' '}
                         {tech.prerequisites.length > 0
                           ? tech.prerequisites.map((item) => frGenericLabel(item)).join(' -> ')
                           : 'Aucun'}
                       </div>
                       {isCurrent && (
-                        <div style={{ marginTop: 4, fontSize: 10, fontWeight: 700 }}>
+                        <div style={{ marginTop: 4, fontSize: 11.5, fontWeight: 700 }}>
                           Recherche active
                         </div>
                       )}
                       {!researched && !available && canResearch.reason && (
-                        <div style={{ marginTop: 4, fontSize: 10, opacity: 0.82 }}>
+                        <div style={{ marginTop: 4, fontSize: 11.5, opacity: 0.82 }}>
                           Verrouille: {canResearch.reason}
                         </div>
                       )}

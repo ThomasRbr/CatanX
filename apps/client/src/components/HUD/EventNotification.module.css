@@ -1,7 +1,8 @@
 .notification {
   /* .ui-panel (global) resets position to relative and dropped the chip onto the players panel. */
   position: absolute !important;
-  top: 118px;
+  /* Below the resource bar, including its optional Cities & Knights commodity row. */
+  top: 174px;
   right: 64px;
   z-index: 36;
   width: auto;
@@ -18,7 +19,7 @@
   color: #fff5df;
   background:
     radial-gradient(circle at 0 50%, rgba(255, 107, 95, .2), transparent 36%),
-    linear-gradient(135deg, rgba(64, 42, 31, .97), rgba(20, 17, 19, .98));
+    linear-gradient(160deg, rgba(16, 36, 62, 0.96), rgba(8, 18, 34, 0.95));
   box-shadow: 0 14px 30px rgba(7, 3, 2, .4), inset 0 1px 0 rgba(255, 255, 255, .12);
   cursor: pointer;
   isolation: isolate;
@@ -55,8 +56,8 @@
 }
 
 .copy { min-width: 0; display: grid; gap: 1px; text-align: left; }
-.copy small { color: #ffb977; font-size: 7px; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
-.copy strong { overflow: hidden; font-size: 10px; letter-spacing: .02em; text-overflow: ellipsis; white-space: nowrap; }
+.copy small { color: #ffb977; font-size: 10px; font-weight: 900; letter-spacing: .13em; text-transform: uppercase; }
+.copy strong { overflow: hidden; font-size: 12px; letter-spacing: .02em; text-overflow: ellipsis; white-space: nowrap; }
 .count {
   min-width: 21px;
   height: 21px;
@@ -67,7 +68,7 @@
   color: #2a160d;
   background: linear-gradient(145deg, #ffe09b, #ff9c62);
   box-shadow: 0 3px 10px rgba(0, 0, 0, .25);
-  font-size: 9px;
+  font-size: 11.5px;
   font-weight: 900;
 }
 

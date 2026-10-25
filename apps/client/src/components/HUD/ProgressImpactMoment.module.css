@@ -2,10 +2,10 @@
   --deck-accent: #74d9ee;
   --deck-deep: #102c3c;
   position: relative;
-  width: min(286px, calc(100vw - 28px));
-  min-height: 60px;
+  width: min(304px, calc(100vw - 28px));
+  min-height: 64px;
   display: grid;
-  grid-template-columns: 36px minmax(0, 1fr) 25px;
+  grid-template-columns: 56px minmax(0, 1fr) 25px;
   align-items: center;
   gap: 8px;
   padding: 7px 8px;
@@ -80,7 +80,7 @@
 
 .card {
   position: relative;
-  height: 44px;
+  height: 50px;
   display: grid;
   align-content: center;
   justify-items: center;
@@ -119,16 +119,15 @@
 }
 .card > span {
   color: var(--deck-accent);
-  font-size: 16px;
+  font-size: 17px;
   line-height: 1;
   text-shadow: 0 0 18px color-mix(in srgb, var(--deck-accent) 62%, transparent);
 }
 .card small {
-  color: rgba(255, 248, 233, 0.62);
-  font-size: 5px;
-  font-weight: 900;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  color: rgba(255, 248, 233, 0.76);
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: 0;
 }
 
 .copy {
@@ -138,7 +137,7 @@
 }
 .eyebrow {
   color: var(--deck-accent);
-  font-size: 6px;
+  font-size: 9.5px;
   font-weight: 950;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -146,21 +145,21 @@
 .copy strong {
   overflow: hidden;
   font-family: var(--font-display);
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .source {
   color: rgba(255, 248, 233, 0.84);
-  font-size: 8px;
+  font-size: 11px;
   font-weight: 750;
 }
 .copy p {
   margin: 3px 0 0;
   overflow: hidden;
   color: rgba(255, 248, 233, 0.68);
-  font-size: 7.5px;
+  font-size: 10.5px;
   line-height: 1.25;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -189,7 +188,7 @@
   border-radius: 50%;
   color: #081016;
   background: var(--deck-accent);
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 950;
   box-shadow:
     0 0 0 5px color-mix(in srgb, var(--deck-accent) 10%, transparent),
@@ -303,15 +302,15 @@
     height: 44px;
   }
   .card > span {
-    font-size: 16px;
+    font-size: 17px;
   }
   .copy strong {
-    font-size: 12px;
+    font-size: 13px;
   }
   .impactMark span {
     width: 22px;
     height: 22px;
-    font-size: 12px;
+    font-size: 13px;
   }
 }
 

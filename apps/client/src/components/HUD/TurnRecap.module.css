@@ -17,14 +17,14 @@
 }
 .eyebrow {
   color: #ffcd4a;
-  font-size: 9px;
+  font-size: 10.5px;
   font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 .recap > strong {
   font-family: var(--font-display);
-  font-size: 15px;
+  font-size: 16px;
 }
 .recap ul {
   width: 100%;
@@ -40,7 +40,7 @@
   border-radius: 6px;
   background: rgba(255, 244, 220, 0.07);
   color: rgba(255, 245, 223, 0.84);
-  font-size: 10px;
+  font-size: 12px;
   line-height: 1.25;
   text-align: center;
   text-overflow: ellipsis;
@@ -49,7 +49,7 @@
 .recap small {
   margin-top: 2px;
   color: rgba(255, 245, 223, 0.65);
-  font-size: 10px;
+  font-size: 12px;
 }
 @keyframes recapIn {
   0% {

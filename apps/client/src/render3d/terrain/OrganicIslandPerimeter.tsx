@@ -33,8 +33,13 @@ function vertex(index: number): THREE.Vector2 {
   );
 }
 
+/**
+ * Integer keys: `toFixed` printed a corner at -1e-17 as "-0.0000" and its
+ * twin from the neighbouring tile as "0.0000", so the edges never chained and
+ * the coast broke into open fragments.
+ */
 function pointKey(point: THREE.Vector2): string {
-  return `${point.x.toFixed(4)}:${point.y.toFixed(4)}`;
+  return `${Math.round(point.x * 1000) + 0}:${Math.round(point.y * 1000) + 0}`;
 }
 
 function boundaryEdges(tiles: readonly HexTile[]): BoundaryEdge[] {
@@ -61,7 +66,42 @@ function boundaryEdges(tiles: readonly HexTile[]): BoundaryEdge[] {
   return edges;
 }
 
-function edgeLoops(edges: readonly BoundaryEdge[], mapSeed: number): THREE.Vector2[][] {
+interface CoastLoop {
+  points: THREE.Vector2[];
+  /** False when tracing ran out of edges before returning to its start. */
+  closed: boolean;
+}
+
+function cross2(a: THREE.Vector2, b: THREE.Vector2): number {
+  return a.x * b.y - a.y * b.x;
+}
+
+/**
+ * Where two land masses touch at a single corner, two boundary edges leave
+ * the same vertex. Taking the first one could jump to the other mass, leave a
+ * loop open (its closing quad then spanned the island as a streak) or flip the
+ * outward normals of a whole stretch (rings folded into standing "boxes").
+ * Always take the turn that hugs the land the tightest instead.
+ */
+function nextEdge(current: BoundaryEdge, candidates: readonly BoundaryEdge[]): BoundaryEdge | undefined {
+  if (candidates.length <= 1) return candidates[0];
+  const incoming = current.end.clone().sub(current.start);
+  // Land lies opposite the outward normal.
+  const landSide = Math.sign(cross2(incoming, current.outward.clone().negate())) || 1;
+  let best: BoundaryEdge | undefined;
+  let bestTurn = Number.NEGATIVE_INFINITY;
+  for (const candidate of candidates) {
+    const outgoing = candidate.end.clone().sub(candidate.start);
+    const turn = Math.atan2(cross2(incoming, outgoing), incoming.dot(outgoing)) * landSide;
+    if (turn > bestTurn) {
+      bestTurn = turn;
+      best = candidate;
+    }
+  }
+  return best;
+}
+
+function edgeLoops(edges: readonly BoundaryEdge[], mapSeed: number): CoastLoop[] {
   const byStart = new Map<string, BoundaryEdge[]>();
   for (const edge of edges) {
     const bucket = byStart.get(pointKey(edge.start)) ?? [];
@@ -69,16 +109,18 @@ function edgeLoops(edges: readonly BoundaryEdge[], mapSeed: number): THREE.Vecto
     byStart.set(pointKey(edge.start), bucket);
   }
   const unused = new Set(edges.map((edge) => edge.id));
-  const loops: THREE.Vector2[][] = [];
+  const loops: CoastLoop[] = [];
 
   while (unused.size > 0) {
     const first = edges.find((edge) => unused.has(edge.id));
     if (!first) break;
     const loop: THREE.Vector2[] = [];
     let current: BoundaryEdge | undefined = first;
+    let last: BoundaryEdge = first;
     let guard = 0;
     while (current && unused.has(current.id) && guard++ < edges.length + 2) {
       unused.delete(current.id);
+      last = current;
       const phase = ((hashString(`${mapSeed}:${current.id}`) % 1000) / 1000) * Math.PI * 2;
       const segments = 8;
       for (let segment = 0; segment < segments; segment++) {
@@ -96,26 +138,32 @@ function edgeLoops(edges: readonly BoundaryEdge[], mapSeed: number): THREE.Vecto
         point.addScaledVector(current.outward, drift);
         loop.push(point);
       }
-      const candidates: BoundaryEdge[] = byStart.get(pointKey(current.end)) ?? [];
-      current = candidates.find((candidate: BoundaryEdge) => unused.has(candidate.id));
+      const candidates: BoundaryEdge[] = (byStart.get(pointKey(current.end)) ?? []).filter(
+        (candidate) => unused.has(candidate.id),
+      );
+      current = nextEdge(current, candidates);
     }
-    if (loop.length >= 8) loops.push(loop);
+    const closed = pointKey(last.end) === pointKey(first.start);
+    if (loop.length >= 8) loops.push({ points: loop, closed });
   }
   return loops;
 }
 
-function smoothClosed(points: readonly THREE.Vector2[]): THREE.Vector2[] {
+function smoothLoop({ points, closed }: CoastLoop): CoastLoop {
   let output = points.map((point) => point.clone());
   for (let iteration = 0; iteration < 3; iteration++) {
     const next: THREE.Vector2[] = [];
-    for (let index = 0; index < output.length; index++) {
+    const segments = closed ? output.length : output.length - 1;
+    if (!closed) next.push(output[0]!.clone());
+    for (let index = 0; index < segments; index++) {
       const a = output[index]!;
       const b = output[(index + 1) % output.length]!;
       next.push(a.clone().lerp(b, 0.25), a.clone().lerp(b, 0.75));
     }
+    if (!closed) next.push(output[output.length - 1]!.clone());
     output = next;
   }
-  return output;
+  return { points: output, closed };
 }
 
 function signedArea(points: readonly THREE.Vector2[]): number {
@@ -149,12 +197,94 @@ function nearestLand(
   return nearest;
 }
 
+/** Vertices per loop sample: inner, shoulder, upper beach, lower beach, wet line, outer. */
+const RING_COUNT = 6;
+
+/**
+ * The shoulder height follows the terrain sampled just inside the coast, so
+ * every bump of a relief tile became a step in the skirt — a stair of facets
+ * that was most visible on bright snow. Three circular [¼ ½ ¼] passes keep the
+ * shelf continuous; it never rises above its own inner ring.
+ */
+function smoothRing(heights: number[], passes: number): number[] {
+  const count = heights.length;
+  let out = heights;
+  for (let pass = 0; pass < passes; pass++) {
+    const current = out;
+    out = current.map(
+      (height, index) =>
+        current[(index + count - 1) % count]! * 0.25 + height * 0.5 + current[(index + 1) % count]! * 0.25,
+    );
+  }
+  return out;
+}
+
+/**
+ * Offsetting a zig-zag coastline outward folds the far rings over themselves
+ * at every concave hex corner — stepped flaps, most visible on wide snow
+ * shelves. Relaxing each ring's XZ along the loop (harder for farther rings)
+ * unfolds them into a continuous, rounded shore.
+ */
+function smoothOuterRings(
+  positions: number[],
+  snowWeights: readonly number[],
+  base: number,
+  count: number,
+): void {
+  if (count < 3) return;
+  for (let ring = 0; ring < RING_COUNT; ring++) {
+    const vertex = (index: number) => base + index * RING_COUNT + ring;
+    // The shoulder (ring 1) must stay just outside the hex edge, where the
+    // terrain's vertical skirt stands, or that wall pokes through the shore.
+    // The inner ring may relax on snow, where it is the field's own white.
+    // Same strength for every outer ring keeps them parallel: different
+    // strengths made neighbouring rings cross at concave corners.
+    const passes = 8;
+    const xs0 = Array.from({ length: count }, (_, index) => positions[vertex(index) * 3]!);
+    const zs0 = Array.from({ length: count }, (_, index) => positions[vertex(index) * 3 + 2]!);
+    const xs = smoothRing(xs0, passes);
+    const zs = smoothRing(zs0, passes);
+    for (let index = 0; index < count; index++) {
+      const amount = ring === 1 ? 0.35 : ring === 0 ? (snowWeights[vertex(index)] ?? 0) : 1;
+      positions[vertex(index) * 3] = THREE.MathUtils.lerp(xs0[index]!, xs[index]!, amount);
+      positions[vertex(index) * 3 + 2] = THREE.MathUtils.lerp(zs0[index]!, zs[index]!, amount);
+    }
+  }
+}
+
+function smoothShoulderHeights(
+  positions: number[],
+  snowWeights: readonly number[],
+  base: number,
+  count: number,
+): void {
+  if (count < 3) return;
+  const vertex = (index: number, ring: number) => base + index * RING_COUNT + ring;
+  const y = (index: number, ring: number) => positions[vertex(index, ring) * 3 + 1]!;
+  // On snow, smoothing only fills the valleys between ice-cap bumps: lowering
+  // a ring would let the terrain's hexagonal skirt wall show above the shelf.
+  const inner = Array.from({ length: count }, (_, index) => y(index, 0));
+  const innerSmooth = smoothRing(inner, 6);
+  for (let index = 0; index < count; index++) {
+    const snow = snowWeights[vertex(index, 0)] ?? 0;
+    const filled = Math.max(inner[index]!, innerSmooth[index]!);
+    positions[vertex(index, 0) * 3 + 1] = THREE.MathUtils.lerp(inner[index]!, filled, snow);
+  }
+  const original = Array.from({ length: count }, (_, index) => y(index, 1));
+  const shoulder = smoothRing(original, 3);
+  for (let index = 0; index < count; index++) {
+    const snow = snowWeights[vertex(index, 1)] ?? 0;
+    const target = snow > 0.5 ? Math.max(shoulder[index]!, original[index]!) : shoulder[index]!;
+    positions[vertex(index, 1) * 3 + 1] = Math.min(target, y(index, 0));
+  }
+}
+
 export function buildOrganicPerimeterGeometry(
   tiles: readonly HexTile[],
   mapSeed: number,
   sampleHeight?: (x: number, z: number) => number,
 ): THREE.BufferGeometry {
-  const loops = edgeLoops(boundaryEdges(tiles), mapSeed).map(smoothClosed);
+  const loops = edgeLoops(boundaryEdges(tiles), mapSeed).map(smoothLoop);
   const landCenters = tiles
     .filter((tile) => !isWaterTerrain(tile.terrain))
     .map((tile) => {
@@ -163,20 +293,29 @@ export function buildOrganicPerimeterGeometry(
     });
   const positions: number[] = [];
   const colors: number[] = [];
+  const snowWeights: number[] = [];
   const indices: number[] = [];
   const soil = new THREE.Color('#6e6c5e');
   const drySand = new THREE.Color('#d4c4a4');
   const rock = new THREE.Color('#6e716c');
   const wetSand = new THREE.Color('#6a8078');
   const submerged = new THREE.Color('#3d5a60');
+  // Snow coast palette: powder on the rim, compacted snow, blue ice at the
+  // waterline. Tuned against the snow the terrain shader actually renders.
+  const snowRim = new THREE.Color('#f3f7f9');
+  const snowShoulder = new THREE.Color('#e3ebef');
+  const packedSnow = new THREE.Color('#c3d3db');
+  const wetIce = new THREE.Color('#cfdde3');
+  const iceShallows = new THREE.Color('#a3bfca');
 
-  for (const loop of loops) {
+  for (const { points: loop, closed } of loops) {
     const ccw = signedArea(loop) > 0;
     const base = positions.length / 3;
     for (let index = 0; index < loop.length; index++) {
-      const previous = loop[(index + loop.length - 1) % loop.length]!;
+      const last = loop.length - 1;
+      const previous = loop[!closed && index === 0 ? 0 : (index + loop.length - 1) % loop.length]!;
       const current = loop[index]!;
-      const next = loop[(index + 1) % loop.length]!;
+      const next = loop[!closed && index === last ? last : (index + 1) % loop.length]!;
       const tangent = next.clone().sub(previous).normalize();
       const tangentNormal = ccw
         ? new THREE.Vector2(tangent.y, -tangent.x)
@@ -197,34 +336,45 @@ export function buildOrganicPerimeterGeometry(
       const inner = current.clone().addScaledVector(outward, -0.16);
       const shoulder = current.clone().addScaledVector(outward, 0.005 + jitter * 0.12);
       // Gentle coasts get a wider sandy shelf; rocky coasts stay steeper.
-      const beachScale = gentle ? 1.72 : 1.08;
+      // Snowfields end in a rounded ice shelf, not a rock cliff: a brown
+      // vertical face against white ice read as cardboard cut-outs.
+      const snowy = land.terrain === 'glacier' || land.terrain === 'tundra';
+      const beachScale = snowy ? 1.5 : gentle ? 1.72 : 1.08;
       const upperBeach = current.clone().addScaledVector(outward, (0.1 + bay * 0.5 + jitter * 0.25) * beachScale);
       const lowerBeach = current.clone().addScaledVector(outward, (0.2 + bay * 0.65 + jitter * 0.35) * beachScale);
       const wetLine = current.clone().addScaledVector(outward, (0.3 + bay * 0.85 + jitter * 0.48) * beachScale);
       const outer = current.clone().addScaledVector(outward, (0.44 + bay * 1.05 + jitter * 0.58) * beachScale);
       const innerHeight = sampleHeight?.(inner.x, inner.y) ?? HEX_SLAB_THICKNESS;
       const sampledShoulderHeight = sampleHeight?.(shoulder.x, shoulder.y) ?? HEX_SLAB_THICKNESS;
-      const shoulderHeight = THREE.MathUtils.lerp(
-        innerHeight,
-        Math.min(sampledShoulderHeight, gentle ? 0.038 : 0.09),
-        gentle ? 0.42 : 0.62,
-      );
-      const upperHeight = gentle ? 0.008 : 0.028;
-      const lowerHeight = gentle ? -0.018 : -0.008;
+      const shoulderHeight = snowy
+        ? // Level with the terrain edge so its skirt wall stays covered; the
+          // widened beach does the descent instead.
+          Math.min(innerHeight, sampledShoulderHeight + 0.012)
+        : THREE.MathUtils.lerp(
+            innerHeight,
+            Math.min(sampledShoulderHeight, gentle ? 0.038 : 0.09),
+            gentle ? 0.42 : 0.62,
+          );
+      const upperHeight = snowy ? 0.04 : gentle ? 0.008 : 0.028;
+      const lowerHeight = snowy ? -0.004 : gentle ? -0.018 : -0.008;
       const biome = new THREE.Color(TERRAIN_BASE_COLORS[land.terrain]);
-      // Snowfields keep their own white at the rim; the soil tint drew a grey
-      // seam line around every edge glacier.
-      const snowy = land.terrain === 'glacier' || land.terrain === 'tundra';
       const innerColor = snowy
-        ? biome.clone().lerp(soil, 0.1).multiplyScalar(0.96)
+        ? snowRim.clone()
         : biome.clone().lerp(soil, 0.4).offsetHSL(0, -0.06, -0.01).multiplyScalar(0.82);
-      const shoulderColor = biome.clone().lerp(gentle ? drySand : rock, gentle ? 0.72 : 0.7)
-        .offsetHSL(0, -0.05, 0.01)
-        .multiplyScalar(gentle ? 0.92 : 0.8);
-      const upperColor = biome.clone().lerp(gentle ? drySand : rock, gentle ? 0.88 : 0.84)
-        .offsetHSL(0, -0.04, 0.02)
-        .multiplyScalar(gentle ? 0.98 : 0.78);
-      const lowerColor = upperColor.clone().lerp(wetSand, gentle ? 0.35 : 0.48);
+      const shoulderColor = snowy
+        ? snowShoulder.clone()
+        : biome.clone().lerp(gentle ? drySand : rock, gentle ? 0.72 : 0.7)
+            .offsetHSL(0, -0.05, 0.01)
+            .multiplyScalar(gentle ? 0.92 : 0.8);
+      const upperColor = snowy
+        ? packedSnow.clone()
+        : biome.clone().lerp(gentle ? drySand : rock, gentle ? 0.88 : 0.84)
+            .offsetHSL(0, -0.04, 0.02)
+            .multiplyScalar(gentle ? 0.98 : 0.78);
+      const lowerColor = snowy ? wetIce.clone() : upperColor.clone().lerp(wetSand, gentle ? 0.35 : 0.48);
+      const wetColor = snowy
+        ? iceShallows.clone()
+        : new THREE.Color(wetSand.r * 0.88, wetSand.g * 0.92, wetSand.b * 0.94);
       positions.push(
         inner.x, innerHeight + 0.012, inner.y,
         shoulder.x, shoulderHeight + 0.004, shoulder.y,
@@ -238,11 +388,17 @@ export function buildOrganicPerimeterGeometry(
         shoulderColor.r, shoulderColor.g, shoulderColor.b,
         upperColor.r, upperColor.g, upperColor.b,
         lowerColor.r, lowerColor.g, lowerColor.b,
-        wetSand.r * 0.88, wetSand.g * 0.92, wetSand.b * 0.94,
+        wetColor.r, wetColor.g, wetColor.b,
         submerged.r, submerged.g, submerged.b,
       );
+      const snow = snowy ? 1 : 0;
+      snowWeights.push(snow, snow, snow, snow * 0.9, snow * 0.55, 0);
     }
-    for (let index = 0; index < loop.length; index++) {
+    smoothOuterRings(positions, snowWeights, base, loop.length);
+    smoothShoulderHeights(positions, snowWeights, base, loop.length);
+    // An open chain must not be closed: its wrap quad spanned the island.
+    const quads = closed ? loop.length : loop.length - 1;
+    for (let index = 0; index < quads; index++) {
       const next = (index + 1) % loop.length;
       const a = base + index * 6;
       const b = base + next * 6;
@@ -255,10 +411,40 @@ export function buildOrganicPerimeterGeometry(
   const geometry = new THREE.BufferGeometry();
   geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
   geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+  geometry.setAttribute('aSnow', new THREE.Float32BufferAttribute(snowWeights, 1));
   geometry.setIndex(indices);
   geometry.computeVertexNormals();
   geometry.computeBoundingSphere();
   return geometry;
+}
+
+/**
+ * The skirt samples a sand albedo; on snow coasts that tinted the ice beige.
+ * `aSnow` swaps the texel for its luminance (keeping the grain), so the
+ * vertex palette alone decides the colour, and makes the ice a little glossier.
+ */
+function attachSnowShelfShading(material: THREE.MeshStandardMaterial): void {
+  const base = material.onBeforeCompile;
+  material.onBeforeCompile = (shader, renderer) => {
+    base.call(material, shader, renderer);
+    shader.vertexShader = shader.vertexShader
+      .replace('#include <common>', '#include <common>\nattribute float aSnow;\nvarying float vSnow;')
+      .replace('#include <uv_vertex>', '#include <uv_vertex>\n  vSnow = aSnow;');
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <common>', '#include <common>\nvarying float vSnow;')
+      .replace(
+        '#include <map_fragment>',
+        `#include <map_fragment>
+  float catanxSnowGrain = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
+  diffuseColor.rgb = mix(diffuseColor.rgb, vec3(0.9 + 0.22 * (catanxSnowGrain - 0.5)), vSnow);`,
+      )
+      .replace(
+        '#include <roughnessmap_fragment>',
+        '#include <roughnessmap_fragment>\n  roughnessFactor = mix(roughnessFactor, 0.42, vSnow * 0.7);',
+      );
+  };
+  const baseKey = material.customProgramCacheKey.bind(material);
+  material.customProgramCacheKey = () => `${baseKey()}:snow-shelf-v1`;
 }
 
 /** Shared closed shoreline, independent from the logical hex hitboxes. */
@@ -290,6 +476,7 @@ export function OrganicIslandPerimeter({ tiles, mapSeed }: OrganicIslandPerimete
       polygonOffsetUnits: -0.5,
     });
     attachWorldProjectedPbr(result, 0.55);
+    attachSnowShelfShading(result);
     return result;
   }, [quality.textureTier]);
   useEffect(() => () => {

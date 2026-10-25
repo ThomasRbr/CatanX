@@ -52,6 +52,7 @@ import { SeasonalSnowCover } from './terrain/SeasonalSnowCover';
 import { SeasonalSnowDrifts } from './terrain/SeasonalSnowDrifts';
 import { OrganicIslandPerimeter } from './terrain/OrganicIslandPerimeter';
 import { CoastalWetRocks } from './terrain/CoastalWetRocks';
+import { IceFloes } from './terrain/IceFloes';
 import type { BoardRenderSnapshot } from './diorama/BoardRenderSnapshot';
 
 export interface CatanXWorldProps {
@@ -318,6 +319,9 @@ export function CatanXWorld({
         )}
         {surfaceView && cameraModel === 'perspective' && (
           <CoastalWetRocks tiles={tiles} mapSeed={mapSeed} season={season} />
+        )}
+        {surfaceView && cameraModel === 'perspective' && (
+          <IceFloes tiles={tiles} mapSeed={mapSeed} season={season} />
         )}
         {/* MountainRidgeNetwork is retired on the perspective board: the
             heightfield now carves real summits and arêtes, and the extra ridge

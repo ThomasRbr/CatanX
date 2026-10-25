@@ -143,14 +143,15 @@ select {
   z-index: 1;
 }
 
-.app-shell[data-ui-scale='0.85'] {
-  font-size: 85%;
-}
-.app-shell[data-ui-scale='1.1'] {
-  font-size: 110%;
-}
-.app-shell[data-ui-scale='1.25'] {
-  font-size: 125%;
+/*
+ * Interface scale (Paramètres → Échelle de l'interface). Components are sized
+ * in px, so the former font-size percentages had no visible effect; `zoom`
+ * scales every HUD layer, panel and modal as a whole. The 3D board is never
+ * zoomed: its canvas, camera and picking keep their own pixel space.
+ */
+.app-root > :not(.app-shell),
+.app-shell > :not(.map-layer):not(:has(.map-layer)) {
+  zoom: var(--ui-zoom, 1);
 }
 
 .app-shell[data-season='spring'] {
@@ -205,6 +206,11 @@ select {
   pointer-events: none;
 }
 
+/* An open player card must sit above the extension launchers next to it. */
+.hud-left-status-stack:has(.profile-popover) {
+  z-index: 60;
+}
+
 .hud-left-status-stack {
   position: absolute;
   top: 14px;
@@ -218,7 +224,23 @@ select {
 }
 
 .hud-left-status-slot {
-  width: min(222px, calc(100vw - 28px));
+  /* Matches the players panel (TurnIndicator) width. */
+  width: min(268px, calc(100vw - 28px));
+}
+
+.hud-left-systems-slot {
+  display: grid;
+  gap: 8px;
+  max-height: calc(100vh - 420px);
+  overflow-y: auto;
+  pointer-events: auto;
+  scrollbar-width: thin;
+}
+
+.hud-left-systems-slot > * {
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
 }
 
 .hud-left-phase-slot {
@@ -487,13 +509,13 @@ select {
 }
 .commerce-tabs__title small {
   color: #66d9d1;
-  font-size: 7px;
+  font-size: 10px;
   font-weight: 900;
   letter-spacing: 0.15em;
 }
 .commerce-tabs__title strong {
   font-family: var(--font-display);
-  font-size: 14px;
+  font-size: 16px;
   color: #fff5df;
 }
 .commerce-tabs__head > button {
@@ -517,7 +539,7 @@ select {
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.05);
   color: rgba(255, 245, 223, 0.68);
-  font-size: 9px;
+  font-size: 11.5px;
   font-weight: 750;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -793,6 +815,9 @@ select {
 .modal-backdrop {
   position: absolute;
   inset: 0;
+  /* Above every HUD layer (players panel 34, extension docks 43–46, turn
+     panel 40, session menu 45): modals were drawn under the side panels. */
+  z-index: 200;
   display: grid;
   place-items: center;
   background: rgba(5, 14, 30, 0.7);

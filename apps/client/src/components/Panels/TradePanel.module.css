@@ -49,7 +49,7 @@
 .eyebrow {
   color: #8de5df;
   font:
-    750 9px/1 Inter,
+    750 11.5px/1 Inter,
     sans-serif;
   letter-spacing: 0.16em;
 }
@@ -64,13 +64,13 @@
   border-radius: 12px;
   background: rgba(255, 205, 74, 0.08);
   font:
-    800 16px/1 Sora,
+    800 17px/1 Sora,
     sans-serif;
 }
 .ratio small {
   color: rgba(247, 248, 252, 0.55);
   font:
-    600 8px/1 Inter,
+    600 10px/1 Inter,
     sans-serif;
   text-transform: uppercase;
 }
@@ -95,7 +95,7 @@
 .bankToken strong {
   color: #fff;
   font:
-    750 11px/1 Inter,
+    750 12.5px/1 Inter,
     sans-serif;
 }
 
@@ -121,9 +121,9 @@
   box-shadow: inset 0 2px #1fc8c4;
 }
 .resourcePick > span {
-  color: rgba(247, 248, 252, 0.62);
+  color: rgba(247, 248, 252, 0.74);
   font:
-    650 10px/1 Inter,
+    650 12px/1.15 Inter,
     sans-serif;
 }
 .pickValue {
@@ -143,14 +143,14 @@
   grid-column: 1 / -1;
   width: 100%;
   min-width: 0;
-  padding: 8px 9px;
+  padding: 8px 6px;
   color: #f7f8fc;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 10px;
   outline: none;
   background: #202b3a;
   font:
-    600 11px/1.2 Inter,
+    600 12px/1.2 Inter,
     sans-serif;
 }
 .resourcePick select:focus,
@@ -176,7 +176,7 @@
   margin: 9px 2px 0;
   color: rgba(247, 248, 252, 0.64);
   font:
-    500 11px/1.35 Inter,
+    500 12.5px/1.35 Inter,
     sans-serif;
 }
 .tradeButton {
@@ -195,7 +195,7 @@
     0 10px 24px rgba(31, 200, 196, 0.2),
     inset 0 1px rgba(255, 255, 255, 0.55);
   font:
-    750 12px/1 Inter,
+    750 13px/1 Inter,
     sans-serif;
   cursor: pointer;
 }
@@ -214,7 +214,7 @@
   gap: 5px;
   color: rgba(247, 248, 252, 0.7);
   font:
-    650 10px/1 Inter,
+    650 12px/1 Inter,
     sans-serif;
 }
 .partnerField {
@@ -238,7 +238,7 @@
   border-radius: 16px;
   background: rgba(247, 248, 252, 0.055);
   font:
-    500 12px/1.45 Inter,
+    500 13px/1.45 Inter,
     sans-serif;
 }
 .pendingCard strong {
@@ -274,7 +274,7 @@
   border-radius: 11px;
   background: rgba(247, 248, 252, 0.06);
   font:
-    700 11px/1 Inter,
+    700 12.5px/1 Inter,
     sans-serif;
   cursor: pointer;
 }

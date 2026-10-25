@@ -122,7 +122,7 @@ export function TurnIndicator({
             players.findIndex((player) => player.id === selected.id),
           );
           return (
-            <div className={styles.profilePopover}>
+            <div className={`${styles.profilePopover} profile-popover`}>
               <button
                 type="button"
                 aria-label="Fermer la carte joueur"
