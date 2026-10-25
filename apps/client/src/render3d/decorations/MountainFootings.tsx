@@ -83,7 +83,8 @@ export function MountainFootings({ tiles }: MountainFootingsProps) {
   return (
     <instancedMesh
       ref={plateRef}
-      args={[plateGeo, footingMat, mountainTiles.length]}
+      args={[plateGeo, undefined, mountainTiles.length]}
+        material={footingMat}
       receiveShadow
       frustumCulled={false}
       raycast={() => undefined}

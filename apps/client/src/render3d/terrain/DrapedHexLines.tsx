@@ -257,7 +257,8 @@ const LAGOON_FLOOR = -0.02;
  * at sea. A sand-bar rim and lighter shallows make it read as a lagoon — a
  * real game space — without reintroducing a floating slab.
  */
-export function LagoonMarkers({ tiles }: { tiles: readonly HexTile[] }) {
+export function LagoonMarkers({ tiles, season = 'summer' }: { tiles: readonly HexTile[]; season?: string }) {
+  const winter = season === 'winter';
   const sampler = useSurfaceHeight();
   const lagoons = useMemo(() => {
     const byId = new Map(tiles.map((tile) => [tile.id, tile]));
@@ -290,6 +291,41 @@ export function LagoonMarkers({ tiles }: { tiles: readonly HexTile[] }) {
     return ribbonMaterial('#d8c290', 0.78, false);
   }, []);
   const shallowMaterial = useMemo(() => ribbonMaterial('#8fe3d4', 0.3, false), []);
+  // Winter: the lagoon freezes into a pale ice sheet inside its reef.
+  const iceSheet = useMemo(() => {
+    if (!winter || !lagoons.length) return null;
+    const positions: number[] = [];
+    for (const tile of lagoons) {
+      const world = cubeToWorld(tile.coord);
+      const corners = hexCorners({ x: world.x, z: world.z }, HEX_WORLD_RADIUS * 0.95);
+      for (let i = 0; i < 6; i++) {
+        const a = corners[i]!;
+        const b = corners[(i + 1) % 6]!;
+        positions.push(world.x, LAGOON_FLOOR, world.z, b.x, LAGOON_FLOOR, b.z, a.x, LAGOON_FLOOR, a.z);
+      }
+    }
+    const geometry = new THREE.BufferGeometry();
+    geometry.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+    geometry.computeVertexNormals();
+    return geometry;
+  }, [lagoons, winter]);
+  const iceMaterial = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: '#d9e8ee',
+        roughness: 0.35,
+        metalness: 0,
+        transparent: true,
+        opacity: 0.88,
+        depthWrite: false,
+        polygonOffset: true,
+        polygonOffsetFactor: -2,
+        polygonOffsetUnits: -2,
+      }),
+    [],
+  );
+  useEffect(() => () => iceSheet?.dispose(), [iceSheet]);
+  useEffect(() => () => iceMaterial.dispose(), [iceMaterial]);
   useEffect(() => () => rim?.dispose(), [rim]);
   useEffect(() => () => shallows?.dispose(), [shallows]);
   useEffect(
@@ -302,7 +338,11 @@ export function LagoonMarkers({ tiles }: { tiles: readonly HexTile[] }) {
   if (!rim || !shallows) return null;
   return (
     <group>
-      <mesh geometry={shallows} material={shallowMaterial} renderOrder={2} raycast={noopRaycast} />
+      {iceSheet ? (
+        <mesh geometry={iceSheet} material={iceMaterial} renderOrder={2} raycast={noopRaycast} receiveShadow />
+      ) : (
+        <mesh geometry={shallows} material={shallowMaterial} renderOrder={2} raycast={noopRaycast} />
+      )}
       <mesh geometry={rim} material={rimMaterial} renderOrder={3} raycast={noopRaycast} receiveShadow />
     </group>
   );

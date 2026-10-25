@@ -512,7 +512,8 @@ export function AmbientLife({ gameState, topology, enabled = true }: AmbientLife
       {spots.length > 0 && (
         <instancedMesh
           ref={smokeMeshRef}
-          args={[smokeGeo, smokeMat, Math.max(1, spots.length)]}
+          args={[smokeGeo, undefined, Math.max(1, spots.length)]}
+        material={smokeMat}
           frustumCulled={false}
           raycast={() => undefined}
           renderOrder={8}
@@ -522,14 +523,16 @@ export function AmbientLife({ gameState, topology, enabled = true }: AmbientLife
         <>
           <instancedMesh
             ref={boatHullRef}
-            args={[hullGeo, lifeMat, Math.max(1, boats.length)]}
+            args={[hullGeo, undefined, Math.max(1, boats.length)]}
+        material={lifeMat}
             frustumCulled={false}
             raycast={() => undefined}
             renderOrder={3}
           />
           <instancedMesh
             ref={boatSailRef}
-            args={[sailGeo, lifeMat, Math.max(1, boats.length)]}
+            args={[sailGeo, undefined, Math.max(1, boats.length)]}
+        material={lifeMat}
             frustumCulled={false}
             raycast={() => undefined}
             renderOrder={3}
@@ -540,14 +543,16 @@ export function AmbientLife({ gameState, topology, enabled = true }: AmbientLife
         <>
           <instancedMesh
             ref={millTowerRef}
-            args={[towerGeo, lifeMat, Math.max(1, mills.length)]}
+            args={[towerGeo, undefined, Math.max(1, mills.length)]}
+        material={lifeMat}
             castShadow
             frustumCulled={false}
             raycast={() => undefined}
           />
           <instancedMesh
             ref={millBladeRef}
-            args={[bladeGeo, lifeMat, Math.max(1, mills.length)]}
+            args={[bladeGeo, undefined, Math.max(1, mills.length)]}
+        material={lifeMat}
             frustumCulled={false}
             raycast={() => undefined}
           />
@@ -556,7 +561,8 @@ export function AmbientLife({ gameState, topology, enabled = true }: AmbientLife
       {critters.length > 0 && (
         <instancedMesh
           ref={critterRef}
-          args={[critterGeo, lifeMat, Math.max(1, critters.length)]}
+          args={[critterGeo, undefined, Math.max(1, critters.length)]}
+        material={lifeMat}
           frustumCulled={false}
           raycast={() => undefined}
         />
@@ -564,7 +570,8 @@ export function AmbientLife({ gameState, topology, enabled = true }: AmbientLife
       {birds.length > 0 && (
         <instancedMesh
           ref={birdRef}
-          args={[birdGeo, birdMat, Math.max(1, birds.length)]}
+          args={[birdGeo, undefined, Math.max(1, birds.length)]}
+        material={birdMat}
           frustumCulled={false}
           raycast={() => undefined}
           renderOrder={9}

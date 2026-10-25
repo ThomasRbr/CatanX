@@ -48,6 +48,7 @@ export * from './core/modules';
 export * from './core/extensions';
 export * from './core/victories';
 export * from './core/session';
+export * from './core/setupPreparation';
 export * from './engine/resources/ProductionSystem';
 export * from './engine/military/BarbarianSystem';
 export * from './engine/citiesKnights';

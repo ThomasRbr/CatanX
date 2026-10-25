@@ -25,6 +25,8 @@ import {
   type TreeSpecies,
 } from './photorealTreeGeometry';
 import { useSurfaceHeight } from '../terrain/SurfaceHeightContext';
+import type { GroundClearings } from './BladeField';
+import { treeBlocksView } from './treeClearings';
 
 interface InstancedTreesProps {
   items: DecorInstance[];
@@ -33,6 +35,7 @@ interface InstancedTreesProps {
   season?: string;
   climateId?: string | null;
   naturalized?: boolean;
+  clearings?: GroundClearings | null;
 }
 
 function scrubBucketsByBiome(
@@ -203,7 +206,8 @@ function TreeMeshLayer({
   return (
     <instancedMesh
       ref={ref}
-      args={[geometry, material, items.length]}
+      args={[geometry, undefined, items.length]}
+        material={material}
       castShadow={castShadow}
       receiveShadow={receiveShadow}
       frustumCulled
@@ -513,7 +517,8 @@ function RealisticTreeImpostors({
   return (
     <instancedMesh
       ref={ref}
-      args={[treeImpostorGeo, material, items.length]}
+      args={[treeImpostorGeo, undefined, items.length]}
+        material={material}
       castShadow={false}
       receiveShadow={false}
       frustumCulled
@@ -577,7 +582,8 @@ function ScrubVariantLayer({
   return (
     <instancedMesh
       ref={ref}
-      args={[geo, material, items.length]}
+      args={[geo, undefined, items.length]}
+        material={material}
       castShadow={castShadow}
       receiveShadow
       frustumCulled
@@ -638,7 +644,8 @@ function NaturalUnderstoryLayer({
   return (
     <instancedMesh
       ref={ref}
-      args={[geometry, material, items.length]}
+      args={[geometry, undefined, items.length]}
+        material={material}
       castShadow={castShadow}
       receiveShadow
       frustumCulled
@@ -654,6 +661,7 @@ export function InstancedTrees({
   season = 'summer',
   climateId = null,
   naturalized = false,
+  clearings = null,
 }: InstancedTreesProps) {
   const lod = useMapLod();
   const showScrub = shouldShowScrub(lod);
@@ -689,11 +697,17 @@ export function InstancedTrees({
   const scrubs = useMemo(
     () => items.filter((item) => {
       if (item.kind !== 'scrub') return false;
+      const tile = tilesById.get(item.tileId);
+      // Bushes hide houses as well as trees do.
+      if (tile) {
+        const origin = cubeToWorld(tile.coord);
+        if (treeBlocksView(origin.x + item.x, origin.z + item.z, clearings)) return false;
+      }
       if (!naturalized) return true;
-      const terrain = tilesById.get(item.tileId)?.terrain;
+      const terrain = tile?.terrain;
       return terrain === 'forest' || terrain === 'jungle' || terrain === 'pasture';
     }),
-    [items, naturalized, tilesById],
+    [clearings, items, naturalized, tilesById],
   );
   const scrubBuckets = useMemo(
     () => scrubBucketsByBiome(scrubs, tilesById, season),
@@ -705,7 +719,7 @@ export function InstancedTrees({
   return (
     <group>
       {naturalized ? (
-        <VolumetricTrees items={trees} tilesById={tilesById} season={season} />
+        <VolumetricTrees items={trees} tilesById={tilesById} season={season} clearings={clearings} />
       ) : lod === 0 ? (
         <VolumetricTreeCanopy
           items={trees}

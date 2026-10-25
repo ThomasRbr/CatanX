@@ -62,19 +62,81 @@ const footMat = new THREE.MeshStandardMaterial({
 
 // --- Numeral atlas ---------------------------------------------------------
 
-const ATLAS_GRID = 4;
+const ATLAS_GRID = 8;
 const ATLAS_CELL = 256;
 const VALUES = [2, 3, 4, 5, 6, 8, 9, 10, 11, 12] as const;
+
+/**
+ * Each chit carries the pictogram of what its tile produces. The landscape
+ * changes with the seasons — snow over fields, autumn over meadows — but the
+ * resource must stay readable at a glance in every one of them.
+ */
+type ChitResource = 'wood' | 'clay' | 'sheep' | 'wheat' | 'ore' | 'none';
+const RESOURCES: readonly ChitResource[] = ['wood', 'clay', 'sheep', 'wheat', 'ore', 'none'];
+
+const RESOURCE_STYLE: Record<Exclude<ChitResource, 'none'>, { color: string; paths: string[] }> = {
+  // Same 24×24 glyphs as the HUD icon registry, so board and UI agree.
+  wood: { color: '#2f7a45', paths: ['M11 3h2l1.5 8H9.5L11 3z', 'M8 12h8v2H8z', 'M10 14h4v7h-4z'] },
+  clay: { color: '#bf5130', paths: ['M3 6h8v4H3zM13 6h8v4h-8zM7 12h8v4H7zM3 18h8v4H3zM13 18h8v4h-8z'] },
+  sheep: {
+    color: '#6d9f3e',
+    paths: [
+      'M8 10c0-2.5 2-4.5 4-4.5s4 2 4 4.5c1.5.3 2.5 1.5 2.5 3.2 0 1.8-1.4 3.3-3.2 3.3H8.7C6.9 16.5 5.5 15 5.5 13.2c0-1.7 1-2.9 2.5-3.2z',
+      'M9 16.5l-1 4h2l.5-2.5M15 16.5l1 4h-2l-.5-2.5',
+    ],
+  },
+  wheat: {
+    color: '#c99212',
+    paths: [
+      'M12 3c1.5 2 2 4 2 6-1.2-.4-2-.4-2-.4s-.8 0-2 .4c0-2 .5-4 2-6z',
+      'M8 8c1.2 1.5 1.8 3 2 4.5-.8-.3-1.5-.5-2-.5-.5 0-1.2.2-2 .5.2-1.5.8-3 2-4.5z',
+      'M16 8c1.2 1.5 1.8 3 2 4.5-.8-.3-1.5-.5-2-.5s-1.2.2-2 .5c.2-1.5.8-3 2-4.5z',
+      'M11.5 12.5h1V21h-1z',
+    ],
+  },
+  ore: {
+    color: '#516a80',
+    paths: ['M12 3l7 5v8l-7 5-7-5V8l7-5z', 'M12 8l3.5 2.2v4.2L12 16.5l-3.5-2.1V10.2L12 8z'],
+  },
+};
+
+export function chitResourceFor(tile: Pick<HexTile, 'baseProduction' | 'terrain'>): ChitResource {
+  const production = tile.baseProduction ?? {};
+  for (const resource of ['wood', 'clay', 'sheep', 'wheat', 'ore'] as const) {
+    if ((production[resource] ?? 0) > 0) return resource;
+  }
+  return 'none';
+}
 
 function pipsFor(value: number): number {
   return 6 - Math.abs(7 - value);
 }
 
-function cellIndex(value: number): number {
-  return VALUES.indexOf(value as (typeof VALUES)[number]);
+function cellIndex(value: number, resource: ChitResource = 'none'): number {
+  const valueIndex = VALUES.indexOf(value as (typeof VALUES)[number]);
+  if (valueIndex < 0) return -1;
+  return RESOURCES.indexOf(resource) * VALUES.length + valueIndex;
 }
 
 let atlasTexture: THREE.CanvasTexture | null = null;
+
+function drawResourceBadge(ctx: CanvasRenderingContext2D, resource: ChitResource, cx: number, cy: number) {
+  if (resource === 'none') return;
+  const style = RESOURCE_STYLE[resource];
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(cx, cy, 37, 0, Math.PI * 2);
+  ctx.fillStyle = style.color;
+  ctx.fill();
+  ctx.lineWidth = 3;
+  ctx.strokeStyle = 'rgba(255, 248, 228, 0.9)';
+  ctx.stroke();
+  ctx.translate(cx - 24, cy - 24);
+  ctx.scale(48 / 24, 48 / 24);
+  ctx.fillStyle = '#fff9ec';
+  for (const d of style.paths) ctx.fill(new Path2D(d));
+  ctx.restore();
+}
 
 function numeralAtlas(): THREE.CanvasTexture {
   if (atlasTexture) return atlasTexture;
@@ -87,13 +149,17 @@ function numeralAtlas(): THREE.CanvasTexture {
   ctx.fillStyle = '#efe4c6';
   ctx.fillRect(0, 0, size, size);
 
+  for (const resource of RESOURCES)
   for (const value of VALUES) {
-    const index = cellIndex(value);
+    const index = cellIndex(value, resource);
     const cx = (index % ATLAS_GRID) * ATLAS_CELL + ATLAS_CELL / 2;
     const cy = Math.floor(index / ATLAS_GRID) * ATLAS_CELL + ATLAS_CELL / 2;
     const r = ATLAS_CELL / 2;
     const hot = value === 6 || value === 8;
     const ink = hot ? '#a5281f' : '#2b2117';
+    const badge = resource !== 'none';
+    // Numbers move down a little to make room for the resource badge.
+    const shift = badge ? 22 : 0;
 
     const paper = ctx.createRadialGradient(cx, cy - r * 0.2, r * 0.1, cx, cy, r);
     paper.addColorStop(0, '#fbf4e0');
@@ -113,11 +179,17 @@ function numeralAtlas(): THREE.CanvasTexture {
       ctx.fillRect(cx + Math.cos(a) * d, cy + Math.sin(a) * d, 2, 2);
     }
 
+    // Rim ring in the resource colour: the chit says what it yields even
+    // before the badge is legible.
     ctx.beginPath();
     ctx.arc(cx, cy, r * 0.86, 0, Math.PI * 2);
-    ctx.lineWidth = 4;
-    ctx.strokeStyle = hot ? 'rgba(165,40,31,0.55)' : 'rgba(110,80,44,0.42)';
+    ctx.lineWidth = badge ? 7 : 4;
+    ctx.strokeStyle = badge
+      ? RESOURCE_STYLE[resource as Exclude<ChitResource, 'none'>].color
+      : hot ? 'rgba(165,40,31,0.55)' : 'rgba(110,80,44,0.42)';
     ctx.stroke();
+
+    drawResourceBadge(ctx, resource, cx, cy - 66);
 
     ctx.fillStyle = ink;
     ctx.textAlign = 'center';
@@ -125,15 +197,16 @@ function numeralAtlas(): THREE.CanvasTexture {
     const twoDigits = value >= 10;
     // Lining figures only: Georgia's old-style numerals sit at x-height and
     // shrank every number to a third of the face.
-    ctx.font = `700 ${twoDigits ? 128 : 148}px "Book Antiqua", "Palatino Linotype", "Times New Roman", serif`;
+    const fontSize = (twoDigits ? 128 : 148) - (badge ? 24 : 0);
+    ctx.font = `700 ${fontSize}px "Book Antiqua", "Palatino Linotype", "Times New Roman", serif`;
     if (twoDigits) {
       ctx.save();
-      ctx.translate(cx, cy + 40);
+      ctx.translate(cx, cy + 40 + shift);
       ctx.scale(0.86, 1);
       ctx.fillText(String(value), 0, 0);
       ctx.restore();
     } else {
-      ctx.fillText(String(value), cx, cy + 44);
+      ctx.fillText(String(value), cx, cy + 44 + shift);
     }
 
     const pips = pipsFor(value);
@@ -141,7 +214,7 @@ function numeralAtlas(): THREE.CanvasTexture {
     const startX = cx - ((pips - 1) * spacing) / 2;
     for (let i = 0; i < pips; i++) {
       ctx.beginPath();
-      ctx.arc(startX + i * spacing, cy + 80, 6, 0, Math.PI * 2);
+      ctx.arc(startX + i * spacing, cy + 80 + shift * 0.5, 6, 0, Math.PI * 2);
       ctx.fill();
     }
   }
@@ -190,7 +263,7 @@ function numeralFaceMaterial(): THREE.MeshStandardMaterial {
       '#include <emissivemap_fragment>\n  totalEmissiveRadiance += diffuseColor.rgb * 0.28;',
     );
   };
-  material.customProgramCacheKey = () => 'catanx-token-face-v2';
+  material.customProgramCacheKey = () => 'catanx-token-face-v3';
   faceMaterial = material;
   return material;
 }
@@ -217,7 +290,7 @@ function ghostMaterial(): THREE.MeshBasicMaterial {
       toneMapped: false,
     });
     ghostFaceMaterial.onBeforeCompile = remapAtlasUv;
-    ghostFaceMaterial.customProgramCacheKey = () => 'catanx-token-ghost-v1';
+    ghostFaceMaterial.customProgramCacheKey = () => 'catanx-token-ghost-v2';
   }
   return ghostFaceMaterial;
 }
@@ -318,7 +391,7 @@ export function ProductionToken3D({
     const geometry = new THREE.CircleGeometry(FACE_RADIUS, 48);
     const cells = new Float32Array(placements.length * 2);
     placements.forEach((placement, i) => {
-      const index = Math.max(0, cellIndex(placement.tile.diceValue));
+      const index = Math.max(0, cellIndex(placement.tile.diceValue, chitResourceFor(placement.tile)));
       cells[i * 2] = (index % ATLAS_GRID) / ATLAS_GRID;
       // CanvasTexture is flipped: canvas row 0 is the top of UV space.
       cells[i * 2 + 1] = 1 - (Math.floor(index / ATLAS_GRID) + 1) / ATLAS_GRID;

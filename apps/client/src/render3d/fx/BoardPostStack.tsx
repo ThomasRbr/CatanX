@@ -113,8 +113,11 @@ const BoardGrade = forwardRef<BoardGradeEffect, { settings: GradeSettings }>(fun
   useEffect(() => {
     effect.apply(settings);
   }, [effect, settings]);
-  useEffect(() => () => effect.dispose(), [effect]);
-  return <primitive ref={ref} object={effect} dispose={null} />;
+  // `dispose={null}` on a primitive makes R3F assign `effect.dispose = null`, so the
+  // cleanup threw on unmount and the board fell back to the legacy renderer.
+  // Primitives are never auto-disposed, so dispose explicitly via the prototype.
+  useEffect(() => () => BoardGradeEffect.prototype.dispose.call(effect), [effect]);
+  return <primitive ref={ref} object={effect} />;
 });
 
 /** Season-aware grade. Kept gentle: the materials already carry the biome. */
@@ -184,7 +187,9 @@ export const BoardPostStack = memo(function BoardPostStack({
     () => (fogVolume ? new FogVolumeEffect(fogVolume, camera) : null),
     [camera, fogVolume],
   );
-  useEffect(() => () => fogEffect?.dispose(), [fogEffect]);
+  useEffect(() => () => {
+    if (fogEffect) Object.getPrototypeOf(fogEffect).dispose.call(fogEffect);
+  }, [fogEffect]);
   const grade = useMemo(() => gradeFor(season, cinematic), [season, cinematic]);
 
   const dbg = typeof location !== 'undefined' ? new URLSearchParams(location.search).get('post') ?? '' : '';
@@ -218,7 +223,7 @@ export const BoardPostStack = memo(function BoardPostStack({
         ) : null}
         {/* Clouds go over the occluded scene but before bloom and tone
             mapping, so their sunlit tops are graded with everything else. */}
-        {fogEffect && !dbg.includes('nofog') ? <primitive object={fogEffect} dispose={null} /> : null}
+        {fogEffect && !dbg.includes('nofog') ? <primitive object={fogEffect} /> : null}
         {/* Only true highlights bloom: sun glitter, snow in full sun, glass. */}
         {dbg.includes('nobloom') ? null : <Bloom
           mipmapBlur

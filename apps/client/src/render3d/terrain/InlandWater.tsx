@@ -30,11 +30,12 @@ const BANK_DROP = 0.055;
 const VERTEX = /* glsl */ `
 #include <fog_pars_vertex>
 uniform float uTime;
+uniform float uFrozen;
 varying vec3 vWorldPosition;
 void main() {
   vec4 world = modelMatrix * vec4(position, 1.0);
-  world.y += sin(world.x * 2.4 + uTime * 0.9) * 0.004
-           + sin(world.z * 3.1 - uTime * 0.7) * 0.003;
+  world.y += (1.0 - uFrozen) * sin(world.x * 2.4 + uTime * 0.9) * 0.004
+           + (1.0 - uFrozen) * sin(world.z * 3.1 - uTime * 0.7) * 0.003;
   vWorldPosition = world.xyz;
   vec4 mvPosition = viewMatrix * world;
   #ifdef USE_FOG
@@ -50,6 +51,8 @@ ${SKY_UNIFORM_DECLARATIONS}
 uniform float uTime;
 uniform vec3 uShallow;
 uniform vec3 uDeep;
+/** 0 = open water, 1 = frozen lake (winter). */
+uniform float uFrozen;
 varying vec3 vWorldPosition;
 
 ${SKY_COLOR_FUNCTION}
@@ -94,6 +97,23 @@ void main() {
   // Still water is darker than open sea and reflects more of the sky.
   vec3 body = mix(uDeep, uShallow, catanxLakeNoise(p * 0.7) * 0.5 + 0.25);
   vec3 color = mix(body, reflection, clamp(fresnel * 1.6, 0.0, 0.72));
+
+  if (uFrozen > 0.001) {
+    // Winter ice: milky blue-white sheet, darker clear patches, a web of
+    // pressure cracks and frost dust; it reflects the sky only faintly.
+    float cloud = catanxLakeNoise(p * 2.2) * 0.6 + catanxLakeNoise(p * 7.0) * 0.4;
+    vec3 ice = mix(vec3(0.62, 0.76, 0.84), vec3(0.88, 0.94, 0.97), smoothstep(0.3, 0.75, cloud));
+    float crackA = abs(catanxLakeNoise(p * 5.3 + 3.1) - 0.5);
+    float crackB = abs(catanxLakeNoise(p * 11.0 - 7.7) - 0.5);
+    float cracks = (1.0 - smoothstep(0.0, 0.035, crackA)) * 0.55 + (1.0 - smoothstep(0.0, 0.02, crackB)) * 0.3;
+    ice = mix(ice, vec3(0.42, 0.58, 0.68), cracks);
+    float frost = smoothstep(0.62, 0.9, catanxLakeNoise(p * 18.0));
+    ice = mix(ice, vec3(0.97, 0.99, 1.0), frost * 0.5);
+    vec3 iceColor = mix(ice, reflection, clamp(fresnel * 0.6, 0.0, 0.25));
+    float glint = pow(max(dot(vec3(0.0, 1.0, 0.0), normalize(normalize(uSunDirection) + viewDirection)), 0.0), 60.0);
+    iceColor += uSunColor * glint * 0.35;
+    color = mix(color, iceColor, uFrozen);
+  }
 
   vec3 halfVector = normalize(normalize(uSunDirection) + viewDirection);
   color += uSunColor * pow(max(dot(normal, halfVector), 0.0), 300.0) * 2.2;
@@ -197,6 +217,7 @@ export function InlandWater({
       uTime: { value: 0 },
       uShallow: { value: grade.waterShallow.clone() },
       uDeep: { value: grade.waterMid.clone() },
+      uFrozen: { value: normalizedSeason === 'winter' ? 1 : 0 },
       uZenith: { value: grade.zenith.clone() },
       uHorizon: { value: grade.horizon.clone() },
       uHaze: { value: grade.haze.clone() },
@@ -240,6 +261,9 @@ export function InlandWater({
     const target = gradeRef.current;
     uniforms.uShallow.value.lerp(target.waterShallow, speed);
     uniforms.uDeep.value.lerp(target.waterMid, speed);
+    // Lakes freeze over and thaw gradually when the season turns.
+    const frozen = normalizedSeason === 'winter' ? 1 : 0;
+    uniforms.uFrozen.value += (frozen - uniforms.uFrozen.value) * Math.min(1, delta * 0.8);
     uniforms.uZenith.value.lerp(target.zenith, speed);
     uniforms.uHorizon.value.lerp(target.horizon, speed);
     uniforms.uHaze.value.lerp(target.haze, speed);

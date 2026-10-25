@@ -130,7 +130,8 @@ export function IceFloes({ tiles, mapSeed, season = 'summer' }: IceFloesProps) {
     <instancedMesh
       key={placements.length}
       ref={meshRef}
-      args={[geometry, material, placements.length]}
+      args={[geometry, undefined, placements.length]}
+      material={material}
       receiveShadow
       raycast={() => undefined}
     />

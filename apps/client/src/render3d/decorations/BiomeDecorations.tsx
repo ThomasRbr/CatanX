@@ -282,6 +282,7 @@ export function BiomeDecorations({
         season={season}
         climateId={climateId}
         naturalized={continuousMountains}
+        clearings={groundClearings}
       />
       <InstancedRocks
         items={items}

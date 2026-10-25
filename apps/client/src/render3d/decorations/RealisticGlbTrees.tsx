@@ -206,7 +206,8 @@ function GlbSpeciesLayer({
     <group>
       <instancedMesh
         ref={trunkRef}
-        args={[trunkGeo, trunkMat, items.length]}
+        args={[trunkGeo, undefined, items.length]}
+        material={trunkMat}
         castShadow={castShadow}
         receiveShadow
         frustumCulled
@@ -214,7 +215,8 @@ function GlbSpeciesLayer({
       />
       <instancedMesh
         ref={foliageRef}
-        args={[foliageGeo, foliageMat, items.length]}
+        args={[foliageGeo, undefined, items.length]}
+        material={foliageMat}
         castShadow={castShadow}
         receiveShadow
         frustumCulled

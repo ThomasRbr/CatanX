@@ -166,8 +166,10 @@ const DRY_TIP = '#d7c68a';
 const SEASON_TIP_SHIFT: Record<string, { meadow: string; wheat: string; scale: number }> = {
   spring: { meadow: '#c2dc6c', wheat: '#d9c463', scale: 1 },
   summer: { meadow: '#b5d062', wheat: '#eec259', scale: 1 },
-  autumn: { meadow: '#c9b866', wheat: '#e0a544', scale: 0.92 },
-  winter: { meadow: '#c9cfc0', wheat: '#c8bfa0', scale: 0.62 },
+  // Meadow and wheat must stay distinct in every season: olive pasture next
+  // to amber grain in autumn, frosted green next to golden stubble in winter.
+  autumn: { meadow: '#a7b558', wheat: '#e3a03c', scale: 0.92 },
+  winter: { meadow: '#a8b88e', wheat: '#c9a25c', scale: 0.62 },
 };
 
 interface Clump {
@@ -324,7 +326,8 @@ function buildClumps(
         y: sampleHeight(x, z) - 0.002,
         z,
         yaw: rng() * Math.PI * 2,
-        height: (spec.height[0] + rng() * (spec.height[1] - spec.height[0])) * shift.scale,
+        // Winter fields keep a short stubble so plains still read as plains.
+        height: (spec.height[0] + rng() * (spec.height[1] - spec.height[0])) * shift.scale * (kind === 'wheat' && season === 'winter' ? 0.6 : 1),
         root: clumpRoot,
         tip: clumpTip,
       });
@@ -427,9 +430,7 @@ export function BladeField({ kind, tiles, mapSeed, season = 'summer', clearings 
 
   const clumps = useMemo(
     () =>
-      kind === 'wheat' && seasonKey === 'winter'
-        ? []
-        : buildClumps(kind, tiles, mapSeed, density, seasonKey, (x, z) => surface.sampleHeight(x, z)),
+      buildClumps(kind, tiles, mapSeed, density, seasonKey, (x, z) => surface.sampleHeight(x, z)),
     [density, kind, mapSeed, seasonKey, surface, tiles],
   );
 
@@ -485,7 +486,8 @@ export function BladeField({ kind, tiles, mapSeed, season = 'summer', clearings 
     <instancedMesh
       key={`${kind}:${clumps.length}`}
       ref={ref}
-      args={[geometry, material, clumps.length]}
+      args={[geometry, undefined, clumps.length]}
+        material={material}
       castShadow={false}
       receiveShadow
       frustumCulled={false}

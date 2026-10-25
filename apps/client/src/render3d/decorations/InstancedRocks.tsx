@@ -144,7 +144,8 @@ function RockVariantLayer({
   return (
     <instancedMesh
       ref={ref}
-      args={[geo, mat, items.length]}
+      args={[geo, undefined, items.length]}
+        material={mat}
       castShadow={castShadow}
       receiveShadow
       frustumCulled
@@ -239,7 +240,8 @@ function NaturalBoulderLayer({
   return (
     <instancedMesh
       ref={ref}
-      args={[geometry, material, items.length]}
+      args={[geometry, undefined, items.length]}
+        material={material}
       castShadow={castShadow}
       receiveShadow
       frustumCulled
@@ -297,7 +299,8 @@ function ProceduralVariantLayer({
   return (
     <instancedMesh
       ref={ref}
-      args={[geo, material, items.length]}
+      args={[geo, undefined, items.length]}
+        material={material}
       castShadow={castShadow}
       receiveShadow
       frustumCulled={false}
@@ -351,7 +354,8 @@ function SimpleVariantLayer({
   return (
     <instancedMesh
       ref={ref}
-      args={[geo, material, items.length]}
+      args={[geo, undefined, items.length]}
+        material={material}
       castShadow={castShadow}
       receiveShadow
       frustumCulled

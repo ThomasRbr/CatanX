@@ -14,6 +14,13 @@ import './index.css';
 
 applyCssVars();
 
+// Dev-only handle for visual QA scripts (seasons, layers). Stripped from builds.
+if (import.meta.env.DEV) {
+  void import('./store/gameStore').then(({ useGameStore }) => {
+    (window as Window & { __catanxDev?: unknown }).__catanxDev = { store: useGameStore };
+  });
+}
+
 const params = new URLSearchParams(window.location.search);
 const scene = params.get('scene');
 const isH1Scene = scene === 'h1';

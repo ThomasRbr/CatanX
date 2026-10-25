@@ -71,7 +71,8 @@ export function PlainsFootings({ tiles }: PlainsFootingsProps) {
   return (
     <instancedMesh
       ref={plateRef}
-      args={[plateGeo, footingMat, plainsTiles.length]}
+      args={[plateGeo, undefined, plainsTiles.length]}
+        material={footingMat}
       receiveShadow
       frustumCulled={false}
       raycast={() => undefined}

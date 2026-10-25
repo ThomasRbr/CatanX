@@ -74,7 +74,8 @@ export function DesertFootings({ tiles }: DesertFootingsProps) {
   return (
     <instancedMesh
       ref={plateRef}
-      args={[plateGeo, footingMat, desertTiles.length]}
+      args={[plateGeo, undefined, desertTiles.length]}
+        material={footingMat}
       receiveShadow
       frustumCulled={false}
       raycast={() => undefined}

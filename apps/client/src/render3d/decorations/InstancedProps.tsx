@@ -59,7 +59,8 @@ function PropVariantLayer({
   return (
     <instancedMesh
       ref={ref}
-      args={[geo, propMat, items.length]}
+      args={[geo, undefined, items.length]}
+        material={propMat}
       castShadow={castShadow}
       receiveShadow
       frustumCulled

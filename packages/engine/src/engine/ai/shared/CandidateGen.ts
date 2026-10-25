@@ -156,7 +156,8 @@ export function listLegalScoredActions(
     const missing = (Object.keys(focusCost) as ResourceType[]).find(
       (r) => (player.resources[r] ?? 0) < (focusCost[r] ?? 0),
     );
-    if (missing) {
+    // Banque à sec : l'échange serait refusé par le moteur (boucle IA infinie).
+    if (missing && (!state.bank || (state.bank[missing] ?? 0) >= 1)) {
       const giveCandidates = (CLASSIC_RESOURCE_TYPES as readonly ResourceType[])
         .filter((r) => r !== missing && (player.resources[r] ?? 0) >= 2)
         .sort((a, b) => (player.resources[b] ?? 0) - (player.resources[a] ?? 0));

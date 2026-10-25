@@ -115,41 +115,56 @@ function color(hex: string): THREE.Color {
  */
 function layerOverride(layer: BoardLayer, grade: AtmosphereGrade): AtmosphereGrade {
   if (layer === 'underground') {
+    // "Les Profondeurs": a near-black cave. A cool, dim key from above models
+    // the rock; every warm or coloured light comes from the cave itself
+    // (chamber glow, lanterns, magma), which is what makes them read.
     return {
       ...grade,
-      zenith: color('#070a0d'),
-      horizon: color('#141a1f'),
-      haze: color('#2a2119'),
-      groundBounce: color('#0b0d0e'),
-      fog: color('#15191c'),
-      fogNear: Math.max(grade.fogNear, 14),
-      fogFar: Math.max(grade.fogFar, 34),
-      hemiSky: color('#89939a'),
-      hemiGround: color('#08090a'),
-      hemiIntensity: 0.24,
-      ambient: 0.1,
-      sunColor: color('#d0a17d'),
-      sunIntensity: 0.58,
-      envIntensity: 0.42,
+      zenith: color('#030304'),
+      horizon: color('#060607'),
+      haze: color('#1c130e'),
+      groundBounce: color('#120a07'),
+      fog: color('#050505'),
+      fogNear: 17,
+      fogFar: 42,
+      hemiSky: color('#5d6a80'),
+      hemiGround: color('#24140c'),
+      hemiIntensity: 1.25,
+      ambient: 0.08,
+      sunColor: color('#9fb2cc'),
+      sunIntensity: 1.6,
+      envIntensity: 0.32,
     };
   }
   if (layer === 'sky') {
+    // "Les Alizés": golden hour above a sea of clouds. A low warm sun rakes
+    // across the cloud deck and the floating islands; the shade side is filled
+    // by a cool blue sky so every island keeps a lit face and a shadowed face.
+    // The sun is the same for every season: the sky layer is a set, not weather.
+    const elevation = THREE.MathUtils.degToRad(35);
+    const azimuth = THREE.MathUtils.degToRad(-58);
     return {
       ...grade,
-      zenith: color('#3f7fb4'),
-      horizon: color('#dbe7ee'),
-      haze: color('#fff2d4'),
-      groundBounce: color('#8fa5b4'),
-      fog: color('#bac9d2'),
-      fogNear: Math.max(grade.fogNear, 18),
-      fogFar: Math.max(grade.fogFar, 42),
-      hemiSky: color('#e8ecee'),
-      hemiGround: color('#53616c'),
-      hemiIntensity: 0.72,
-      ambient: 0.28,
-      sunColor: color('#f3dfc3'),
-      sunIntensity: 1.18,
-      envIntensity: 0.9,
+      sunDirection: new THREE.Vector3(
+        Math.sin(azimuth) * Math.cos(elevation),
+        Math.sin(elevation),
+        Math.cos(azimuth) * Math.cos(elevation),
+      ).normalize(),
+      zenith: color('#1c4f9c'),
+      horizon: color('#f4c98f'),
+      haze: color('#ffd49a'),
+      // Below the horizon the dome stands in for distant cloud: soft lavender.
+      groundBounce: color('#8d93c4'),
+      fog: color('#e9c9a6'),
+      fogNear: 24,
+      fogFar: 72,
+      hemiSky: color('#9fc0ee'),
+      hemiGround: color('#b39a97'),
+      hemiIntensity: 0.95,
+      ambient: 0.1,
+      sunColor: color('#ffd09a'),
+      sunIntensity: 2.7,
+      envIntensity: 0.75,
     };
   }
   return grade;

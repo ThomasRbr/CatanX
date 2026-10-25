@@ -81,7 +81,7 @@ Budget de base 2 (Voiles +1). Climat rude : −1 (min 1). Courants 1 / 2 ; turbu
 
 - Dock **Souterrain & Ciel** : constructions, prospection, expédition / déchargement (aéroport), contrats (soute, site requis, choix de récompense classique), résolutions.
 - Barre de ressources + banque : matériaux Cristal / Éther.
-- Sélecteur de couche 3D : réservé (non branché) — constructions via le panneau.
+- Sélecteur de couche 3D (Ciel / Surface / Souterrain, touches 1-2-3) : diorama de cavernes « Les Profondeurs » et mer de nuages « Les Alizés » ; les constructions se font via le panneau.
 
 ## IA
 

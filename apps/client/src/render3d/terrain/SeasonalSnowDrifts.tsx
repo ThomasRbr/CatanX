@@ -48,7 +48,13 @@ export function SeasonalSnowDrifts({
       if (tile.terrain === 'desert' || tile.terrain === 'volcano') continue;
       const origin = cubeToWorld(tile.coord);
       const count = Math.round(
-        (tile.terrain === 'mountain' || tile.terrain === 'hill' ? 6 : 4)
+        // Drifts pile up in forests and on heights; open farmland keeps only a
+        // few so its own colour stays readable under the snow.
+        (tile.terrain === 'mountain' || tile.terrain === 'goldmine' || tile.terrain === 'glacier'
+          ? 6
+          : tile.terrain === 'forest' || tile.terrain === 'tundra' || tile.terrain === 'jungle'
+            ? 4
+            : 1.5)
           * density
           + (harsh ? 1 : 0),
       );
@@ -124,7 +130,8 @@ export function SeasonalSnowDrifts({
   return (
     <instancedMesh
       ref={meshRef}
-      args={[geometry, material, placements.length]}
+      args={[geometry, undefined, placements.length]}
+        material={material}
       receiveShadow
       castShadow={false}
       renderOrder={4}

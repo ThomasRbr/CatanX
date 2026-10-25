@@ -169,8 +169,9 @@ function buildContinuousGeometry(
 }
 
 function seasonalMaterialTint(season: string): string {
-  if (season === 'winter') return '#d7dedf';
-  if (season === 'autumn') return '#d4b487';
+  // Mild grades only: a strong multiply turned every biome the same colour.
+  if (season === 'winter') return '#e7edee';
+  if (season === 'autumn') return '#efdcb8';
   if (season === 'spring') return '#eef6e9';
   return '#ffffff';
 }

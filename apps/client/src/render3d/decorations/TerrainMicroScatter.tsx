@@ -551,7 +551,8 @@ function GroundCoverLayer({
   if (tufts.length === 0) return null;
   return <instancedMesh
     ref={ref}
-    args={[geometry, material, tufts.length]}
+    args={[geometry, undefined, tufts.length]}
+        material={material}
     castShadow={false}
     receiveShadow={false}
     frustumCulled
@@ -592,7 +593,8 @@ function ForestFloorLayer({
   return (
     <instancedMesh
       ref={ref}
-      args={[geometry, material, items.length]}
+      args={[geometry, undefined, items.length]}
+        material={material}
       castShadow={false}
       receiveShadow={false}
       frustumCulled
@@ -659,7 +661,8 @@ export function TerrainMicroScatter({
   // grass photo, which is a large part of why pasture read as murky scrub.
   const greenMaterial = useMemo(() => new THREE.MeshStandardMaterial({
     map: grassMap,
-    color: season === 'winter' ? '#eef2ec' : season === 'autumn' ? '#e2d49f' : '#dbe6ab',
+    // Frosted, not buried: winter tufts keep a green cast so pasture stays pasture.
+    color: season === 'winter' ? '#cad5c0' : season === 'autumn' ? '#d2d49a' : '#dbe6ab',
     roughness: 0.96,
     metalness: 0,
     side: THREE.DoubleSide,

@@ -152,7 +152,8 @@ export function CoastalWetRocks({ tiles, mapSeed, season = 'summer' }: CoastalWe
   return (
     <instancedMesh
       ref={meshRef}
-      args={[geometry, material, placements.length]}
+      args={[geometry, undefined, placements.length]}
+      material={material}
       castShadow={false}
       receiveShadow
       raycast={() => undefined}

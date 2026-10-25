@@ -308,8 +308,12 @@ export function attachBiomeBlendPbr(
           vBiomeWorldPosition.y + (catanxSnowBreakup - 0.5) * 0.18
         ) * catanxSnowFacing;
         float catanxSnowLee = smoothstep(0.22, 0.82, catanxSnowN.y + catanxSnowN.x * 0.28);
+        // Snow settles per biome so every tile keeps its identity in winter:
+        // summits and forest floors whiten, pastures only frost, wheat stubble
+        // and red clay show through, sand stays bare.
+        float catanxBiomeSnow = dot(vBiomeWeightsA, vec4(0.42, 0.3, 1.0, 0.3)) + vBiomeWeightForest * 0.85;
         float catanxSeasonalSnow = ${snowAmount.toFixed(4)} * catanxSnowFacing * catanxSnowLee
-          * smoothstep(0.25, 0.6, catanxSnowBreakup + 0.2);
+          * smoothstep(0.25, 0.6, catanxSnowBreakup + 0.2) * catanxBiomeSnow;
         // Glaciers carry permanent snow, thinning to blue ice on steep faces.
         float catanxGlacier = smoothstep(0.22, 0.62, vBiomeWeightIce) * mix(0.82, 1.0, catanxSnowBreakup);
         float catanxSnowCoverage = clamp(max(max(catanxAlpineSnow, catanxSeasonalSnow), catanxGlacier), 0.0, 0.96);
@@ -326,6 +330,6 @@ export function attachBiomeBlendPbr(
       .replace('#include <roughnessmap_fragment>', ROUGHNESS_FRAGMENT)
       .replace('#include <aomap_fragment>', AO_FRAGMENT);
   };
-  material.customProgramCacheKey = () => `catanx-biome-blend-pbr-v33-glacier:${worldScale}:${snowAmount}:${macroAlbedo ? 1 : 0}`;
+  material.customProgramCacheKey = () => `catanx-biome-blend-pbr-v34-biome-snow:${worldScale}:${snowAmount}:${macroAlbedo ? 1 : 0}`;
   material.needsUpdate = true;
 }

@@ -292,7 +292,7 @@ export function CatanXWorld({
         {surfaceView && cameraModel === 'perspective' && !cinematic && (
           <HexBorderNetwork tiles={tiles} />
         )}
-        {surfaceView && cameraModel === 'perspective' && <LagoonMarkers tiles={tiles} />}
+        {surfaceView && cameraModel === 'perspective' && <LagoonMarkers tiles={tiles} season={season} />}
         {surfaceView && cameraModel === 'perspective' && !cinematic && (
           <TileEmphasis3D
             tiles={tiles}
@@ -401,6 +401,7 @@ export function CatanXWorld({
             bounds={bounds}
             climateId={climateId}
             enabled={showAnimations}
+            groundVeil={cameraModel !== 'perspective'}
           />
         )}
         {!cinematic && surfaceView && <Units3D gameState={gameState} />}

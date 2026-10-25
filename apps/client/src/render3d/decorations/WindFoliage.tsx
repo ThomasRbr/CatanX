@@ -211,7 +211,8 @@ export function WindFoliage({
   return (
     <instancedMesh
       ref={meshRef}
-      args={[geometry, material, placements.length]}
+      args={[geometry, undefined, placements.length]}
+        material={material}
       castShadow={castShadow}
       receiveShadow
       renderOrder={renderOrder}

@@ -90,7 +90,8 @@ function FieldVariantLayer({
   return (
     <instancedMesh
       ref={ref}
-      args={[geo, fieldMat, items.length]}
+      args={[geo, undefined, items.length]}
+        material={fieldMat}
       receiveShadow
       castShadow={false}
       frustumCulled={false}

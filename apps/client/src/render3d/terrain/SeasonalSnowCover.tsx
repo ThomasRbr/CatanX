@@ -85,7 +85,8 @@ function SnowInstances({
   return (
     <instancedMesh
       ref={mesh}
-      args={[geometry, material, tiles.length]}
+      args={[geometry, undefined, tiles.length]}
+        material={material}
       receiveShadow
       castShadow={false}
       renderOrder={3}
