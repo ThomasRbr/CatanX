@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import type { GameState } from '@catanx/engine';
 import { hexToId } from '@catanx/engine';
 import { HEX_SLAB_THICKNESS } from '../utils/createHexGeometry';
+import { useSurfaceHeight } from '../terrain/SurfaceHeightContext';
 import { cubeToWorld } from '../utils/hexToWorld';
 import { playerColor } from '../utils/playerColors';
 import { unitStackOffset } from '../utils/stackOffset';
@@ -93,6 +94,7 @@ function UnitModel({ kind, color, status }: { kind: UnitKind; color: string; sta
  * Military / civilian units with stack offsets and status auras.
  */
 export function Units3D({ gameState }: Units3DProps) {
+  const surface = useSurfaceHeight();
   const items = useMemo(() => {
     const counters = new Map<string, number>();
     const out: Array<{
@@ -122,12 +124,12 @@ export function Units3D({ gameState }: Units3DProps) {
         status: unit.status,
         hpRatio,
         x: origin.x + off.x,
-        y: HEX_SLAB_THICKNESS + 0.02,
+        y: Math.max(surface.sampleHeight(origin.x + off.x, origin.z + off.z), HEX_SLAB_THICKNESS) + 0.02,
         z: origin.z + off.z,
       });
     }
     return out;
-  }, [gameState.players, gameState.units]);
+  }, [gameState.players, gameState.units, surface]);
 
   if (items.length === 0) return null;
 

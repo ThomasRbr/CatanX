@@ -6,6 +6,7 @@ import { hexToId } from '@catanx/engine';
 import { eventMarkerKind } from '../utils/eventMarkerKind';
 import { climateParticleKind } from '../utils/seasonVisuals';
 import { HEX_SLAB_THICKNESS } from '../utils/createHexGeometry';
+import { useSurfaceHeight } from '../terrain/SurfaceHeightContext';
 import { cubeToWorld } from '../utils/hexToWorld';
 import { playerColor } from '../utils/playerColors';
 import { collectEdgeRoads } from '../utils/resolveRoads';
@@ -218,6 +219,7 @@ function BurstMesh({ burst }: { burst: Burst }) {
  */
 export function StateDiffFx3D({ gameState, topology, enabled }: StateDiffFx3DProps) {
   const [bursts, setBursts] = useState<Burst[]>([]);
+  const surface = useSurfaceHeight();
   const burstsRef = useRef(bursts);
 
   const baseline = useRef(false);
@@ -270,7 +272,10 @@ export function StateDiffFx3D({ gameState, topology, enabled }: StateDiffFx3DPro
           id,
           kind,
           x,
-          y: extra?.y ?? HEX_SLAB_THICKNESS + 0.22,
+          // Offsets are relative to the old flat slab; lift them onto the relief.
+          y:
+            (extra?.y ?? HEX_SLAB_THICKNESS + 0.22) +
+            Math.max(0, surface.sampleHeight(x, z) - HEX_SLAB_THICKNESS),
           z,
           color: color ?? BURST_COLOR[kind],
           born,
@@ -280,7 +285,7 @@ export function StateDiffFx3D({ gameState, topology, enabled }: StateDiffFx3DPro
         },
       ]);
     },
-    [],
+    [surface],
   );
 
   // Prune expired bursts (membership only — animation is per-mesh useFrame)

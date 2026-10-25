@@ -98,7 +98,9 @@ export function DioramaCameraControls({
   // The fit guarantees the island is fully inside the frame; pulling in a
   // little trades that guarantee for a framing that reads as a diorama rather
   // than a map, while the HUD panels still clear the coastline.
-  initialDistanceScale = 0.78,
+  // 0.78 left the island in the middle third of the screen with chits too
+  // small to read; this fills the play area between the HUD panels.
+  initialDistanceScale = 0.64,
 }: DioramaCameraControlsProps) {
   const { camera, gl, size } = useThree();
   const target = useRef(new THREE.Vector3());

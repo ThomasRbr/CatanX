@@ -71,6 +71,22 @@ export function TurnActionPlanner({
     primaryHint = 'Production de l’île';
     primaryIcon = 'dice';
     primaryAction = onRollDice;
+  } else if (phase === 'discard_resources') {
+    // A 7 must be fully resolved before the turn can end: never offer "Fin du tour".
+    primaryLabel = 'Défausse en cours';
+    primaryHint = 'Choisissez les cartes à rendre';
+    primaryIcon = 'warning';
+    primaryDisabled = true;
+  } else if (phase === 'move_robber') {
+    primaryLabel = 'Déplacez le brigand';
+    primaryHint = 'Cliquez une tuile dorée sur l’île';
+    primaryIcon = 'warning';
+    primaryDisabled = true;
+  } else if (phase === 'steal_resource') {
+    primaryLabel = 'Choisissez une victime';
+    primaryHint = 'Voisin du brigand';
+    primaryIcon = 'warning';
+    primaryDisabled = true;
   } else if (pendingChoice) {
     primaryLabel = 'Résoudre le choix';
     primaryHint = 'Décision en attente';
@@ -123,7 +139,9 @@ export function TurnActionPlanner({
       <button
         type="button"
         className={styles.primaryAction}
-        data-tone={pendingChoice ? 'warning' : hasRolledDiceThisTurn ? 'end' : 'dice'}
+        data-tone={
+          pendingChoice || primaryIcon === 'warning' ? 'warning' : hasRolledDiceThisTurn ? 'end' : 'dice'
+        }
         disabled={primaryDisabled}
         onClick={primaryAction}
       >

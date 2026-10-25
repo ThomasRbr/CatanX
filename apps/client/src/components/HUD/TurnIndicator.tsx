@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type CSSProperties } from 'react';
 import type { PlayerProfile } from '@catanx/engine';
 import { frSeason, frTurnPhase } from '../../i18n/fr';
 import {
@@ -81,14 +81,26 @@ export function TurnIndicator({
                 className={player.isActive ? styles.playerActive : styles.player}
                 aria-label={`Voir le profil de ${player.name}`}
                 aria-pressed={selectedId === player.id}
+                style={{ '--piece': pieceColorHex(profile.pieceColor) } as CSSProperties}
                 onClick={() =>
                   setSelectedId((current) => (current === player.id ? null : player.id))
                 }
               >
-                <ProfileAvatar profile={profile} size={34} label="" />
+                <ProfileAvatar profile={profile} size={36} label="" />
                 <span className={styles.playerIdentity}>
                   <strong>{player.name}</strong>
                   <small>{profileTitleLabel(profile.title)}</small>
+                  {typeof player.handSize === 'number' && (
+                    <span className={styles.meta}>
+                      <b data-warn={player.handSize > 7 ? 'true' : undefined}>
+                        {player.handSize}
+                      </b>{' '}
+                      {player.handSize > 1 ? 'cartes' : 'carte'}
+                      {typeof player.devCardCount === 'number' && player.devCardCount > 0
+                        ? ` · ${player.devCardCount} dév.`
+                        : ''}
+                    </span>
+                  )}
                 </span>
                 <span className={styles.score}>
                   {player.vp}

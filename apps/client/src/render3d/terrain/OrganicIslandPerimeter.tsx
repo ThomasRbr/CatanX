@@ -212,7 +212,12 @@ export function buildOrganicPerimeterGeometry(
       const upperHeight = gentle ? 0.008 : 0.028;
       const lowerHeight = gentle ? -0.018 : -0.008;
       const biome = new THREE.Color(TERRAIN_BASE_COLORS[land.terrain]);
-      const innerColor = biome.clone().lerp(soil, 0.4).offsetHSL(0, -0.06, -0.01).multiplyScalar(0.82);
+      // Snowfields keep their own white at the rim; the soil tint drew a grey
+      // seam line around every edge glacier.
+      const snowy = land.terrain === 'glacier' || land.terrain === 'tundra';
+      const innerColor = snowy
+        ? biome.clone().lerp(soil, 0.1).multiplyScalar(0.96)
+        : biome.clone().lerp(soil, 0.4).offsetHSL(0, -0.06, -0.01).multiplyScalar(0.82);
       const shoulderColor = biome.clone().lerp(gentle ? drySand : rock, gentle ? 0.72 : 0.7)
         .offsetHSL(0, -0.05, 0.01)
         .multiplyScalar(gentle ? 0.92 : 0.8);

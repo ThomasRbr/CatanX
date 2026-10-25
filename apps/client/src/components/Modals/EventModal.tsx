@@ -57,7 +57,8 @@ export function EventModal({ event, error, onChoice, onDismiss }: EventModalProp
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 0.32 }}
       >
-        <h2 style={{ marginTop: 0, marginBottom: 6 }}>{event.name}</h2>
+        {/* The global .modal-card h2 is ink-on-ivory; event cards are dark. */}
+        <h2 style={{ marginTop: 0, marginBottom: 6, color: '#fff6e5' }}>{event.name}</h2>
         <p style={{ marginTop: 8, lineHeight: 1.45 }}>{event.description}</p>
         <blockquote style={{ marginLeft: 0, opacity: 0.86, fontStyle: 'italic' }}>
           {event.flavorText}
@@ -114,7 +115,7 @@ export function EventModal({ event, error, onChoice, onDismiss }: EventModalProp
                 <div style={{ fontSize: 12, opacity: 0.85, marginTop: 3 }}>
                   {choice.description}
                 </div>
-                {choice.cost && (
+                {choice.cost && Object.keys(choice.cost).length > 0 && (
                   <div style={{ fontSize: 12, opacity: 0.78, marginTop: 4 }}>
                     Coût:{' '}
                     {Object.entries(choice.cost)

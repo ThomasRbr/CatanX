@@ -8,6 +8,7 @@ import { cubeToWorld, HEX_WORLD_RADIUS } from '../utils/hexToWorld';
 import { edgeOffset, radialRotationY } from '../utils/hexEdges';
 import { findSeaDirection } from '../utils/seaDirection';
 import { isWaterTerrain } from '../decorations/deterministicDecoration';
+import { useSurfaceHeight } from '../terrain/SurfaceHeightContext';
 
 interface Ports3DProps {
   gameState: GameState;
@@ -43,13 +44,16 @@ function labelMaterial(text: string, tint: string): THREE.SpriteMaterial {
   const cached = labelMatCache.get(key);
   if (cached) return cached;
 
-  const width = 256;
-  const height = 112;
+  // Drawn at 2x so the sign stays crisp at the larger in-world size.
+  const S = 2;
+  const width = 256 * S;
+  const height = 112 * S;
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext('2d')!;
   ctx.clearRect(0, 0, width, height);
+  ctx.scale(S, S);
   ctx.shadowColor = 'rgba(20, 14, 6, 0.38)';
   ctx.shadowBlur = 10;
   ctx.shadowOffsetY = 3;
@@ -58,7 +62,7 @@ function labelMaterial(text: string, tint: string): THREE.SpriteMaterial {
   paper.addColorStop(1, '#e8dab6');
   ctx.fillStyle = paper;
   ctx.beginPath();
-  ctx.roundRect(10, 14, width - 20, 80, 40);
+  ctx.roundRect(10, 14, 256 - 20, 80, 40);
   ctx.fill();
   ctx.shadowColor = 'transparent';
   ctx.lineWidth = 5;
@@ -76,15 +80,15 @@ function labelMaterial(text: string, tint: string): THREE.SpriteMaterial {
   ctx.textAlign = 'left';
   ctx.textBaseline = 'middle';
   ctx.fillStyle = '#2b2117';
-  ctx.font = `700 ${resource.length > 6 ? 30 : 34}px "Book Antiqua", "Palatino Linotype", Georgia, serif`;
+  ctx.font = `800 ${resource.length > 6 ? 32 : 37}px "Book Antiqua", "Palatino Linotype", Georgia, serif`;
   ctx.fillText(resource, 84, 40);
-  ctx.fillStyle = '#8a5412';
-  ctx.font = '700 36px "Book Antiqua", "Palatino Linotype", Georgia, serif';
+  ctx.fillStyle = '#7a4308';
+  ctx.font = '800 40px "Book Antiqua", "Palatino Linotype", Georgia, serif';
   ctx.fillText(ratio, 84, 74);
 
   const texture = new THREE.CanvasTexture(canvas);
   texture.colorSpace = THREE.SRGBColorSpace;
-  texture.anisotropy = 4;
+  texture.anisotropy = 8;
   const mat = new THREE.SpriteMaterial({
     map: texture,
     transparent: true,
@@ -176,8 +180,8 @@ function PortDock({ color, label, variant }: { color: string; label: string; var
         <meshStandardMaterial color={color} roughness={0.8} metalness={0.05} flatShading={false} />
       </mesh>
       <sprite
-        position={[0, 0.34, 0.18]}
-        scale={[0.6, 0.26, 1]}
+        position={[0, 0.42, 0.18]}
+        scale={[0.86, 0.38, 1]}
         material={labelMaterial(label, color)}
         raycast={() => undefined}
         renderOrder={4}
@@ -188,6 +192,7 @@ function PortDock({ color, label, variant }: { color: string; label: string; var
 
 /** Coastal docks with warehouse + cargo (H5 commerce). */
 export function Ports3D({ gameState }: Ports3DProps) {
+  const surface = useSurfaceHeight();
   const ports = useMemo(() => {
     const out: Array<{
       key: string;
@@ -222,11 +227,15 @@ export function Ports3D({ gameState }: Ports3DProps) {
 
       const origin = cubeToWorld(anchor.coord);
       const off = edgeOffset(dir, HEX_WORLD_RADIUS * 0.9);
+      const x = origin.x + off.x;
+      const z = origin.z + off.z;
       out.push({
         key: tile.id,
-        x: origin.x + off.x,
-        y: HEX_SLAB_THICKNESS + 0.035,
-        z: origin.z + off.z,
+        x,
+        // On the relief board the shore no longer sits at slab height; keep
+        // the dock on the ground but never below the swell.
+        y: Math.max(surface.sampleHeight(x, z), HEX_SLAB_THICKNESS * 0.35) + 0.035,
+        z,
         rot: radialRotationY(dir),
         color: PORT_COLOR[port] ?? '#c4b896',
         label: PORT_LABEL[port] ?? 'TOUTES · 3:1',
@@ -234,7 +243,7 @@ export function Ports3D({ gameState }: Ports3DProps) {
       });
     }
     return out;
-  }, [gameState.map]);
+  }, [gameState.map, surface]);
 
   if (ports.length === 0) return null;
 

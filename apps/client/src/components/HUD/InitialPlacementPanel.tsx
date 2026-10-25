@@ -35,7 +35,14 @@ export function InitialPlacementPanel({
         </span>
       </div>
       <div className={styles.step}>{stepLabel}</div>
-      <Progress value={progress} label="Progression" />
+      <p className={styles.hint}>
+        {hasPending
+          ? 'Vérifiez l’emplacement en surbrillance, puis confirmez.'
+          : placement.step === 'settlement'
+            ? 'Cliquez une pastille lumineuse à un croisement de tuiles.'
+            : 'Cliquez un segment lumineux qui part de votre village.'}
+      </p>
+      <Progress className={styles.progress} value={progress} label="Progression" />
       {hasPending && (
         <div className={styles.actions}>
           <Button variant="primary" size="sm" onClick={onConfirm}>

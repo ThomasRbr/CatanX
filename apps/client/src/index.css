@@ -320,7 +320,8 @@ select {
 .hud-right-stack {
   position: absolute;
   top: 12px;
-  right: 12px;
+  /* Leaves room for the session menu button pinned in the corner. */
+  right: 64px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
@@ -391,13 +392,14 @@ select {
 }
 
 .turn-planner {
-  border: 1px solid rgba(255, 220, 157, 0.42);
-  border-radius: 10px;
+  border: 1px solid rgba(111, 230, 219, 0.27);
+  border-radius: 16px;
   background:
-    linear-gradient(125deg, rgba(255, 223, 159, 0.1), transparent 35%), #382011 !important;
+    radial-gradient(circle at 10% -12%, rgba(86, 226, 214, 0.17), transparent 43%),
+    linear-gradient(160deg, rgba(16, 36, 62, 0.96), rgba(8, 18, 34, 0.95)) !important;
   box-shadow:
-    0 24px 34px -26px rgba(10, 7, 4, 0.8),
-    inset 0 1px 0 rgba(255, 245, 211, 0.74);
+    0 20px 42px rgba(2, 8, 20, 0.42),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
 }
 
 .context-dock,
@@ -449,7 +451,7 @@ select {
   border-color: rgba(75, 224, 211, 0.28) !important;
   background:
     radial-gradient(circle at 12% 0, rgba(31, 200, 196, 0.14), transparent 38%),
-    linear-gradient(145deg, #3f291d, #1e1412) !important;
+    linear-gradient(160deg, rgba(16, 36, 62, 0.97), rgba(8, 18, 34, 0.96)) !important;
 }
 .commerce-tabs__head {
   display: flex;

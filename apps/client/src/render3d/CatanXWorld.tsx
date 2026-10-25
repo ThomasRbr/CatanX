@@ -33,6 +33,7 @@ import { Coastline } from './terrain/Coastline';
 import { HexTerrain } from './terrain/HexTerrain';
 import { WaterSurface } from './terrain/WaterSurface';
 import { InlandWater } from './terrain/InlandWater';
+import { HexBorderNetwork, LagoonMarkers, TileEmphasis3D } from './terrain/DrapedHexLines';
 import { cubeToWorld } from './utils/hexToWorld';
 import type { MapLodLevel } from './utils/mapLod';
 import { buildWorldTopology } from './utils/topologyToWorld';
@@ -282,6 +283,22 @@ export function CatanXWorld({
             interactionEnabled={!cinematic && tileInteractionEnabled}
             onTileClick={handleTileClick}
             onTileHover={handleHover}
+            flatEmphasis={cameraModel !== 'perspective'}
+          />
+        )}
+        {/* The island reads as one landscape, but every hex stays a legible
+            game space: borders and emphasis are draped on the relief. */}
+        {surfaceView && cameraModel === 'perspective' && !cinematic && (
+          <HexBorderNetwork tiles={tiles} />
+        )}
+        {surfaceView && cameraModel === 'perspective' && <LagoonMarkers tiles={tiles} />}
+        {surfaceView && cameraModel === 'perspective' && !cinematic && (
+          <TileEmphasis3D
+            tiles={tiles}
+            targetTileIds={highlightSet}
+            hoveredTileId={overlayActive ? null : hoveredTile}
+            selectedTileId={overlayActive ? null : selectedTile}
+            animate={showAnimations}
           />
         )}
 

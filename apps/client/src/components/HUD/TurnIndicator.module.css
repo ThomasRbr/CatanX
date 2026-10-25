@@ -1,6 +1,6 @@
 .panel {
   position: relative;
-  width: min(230px, calc(100vw - 28px));
+  width: min(268px, calc(100vw - 28px));
   padding: 9px;
   color: #f7f8fc;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -26,13 +26,13 @@
 .turnHeader span {
   color: #8de5df;
   font:
-    800 8px/1 Inter,
+    800 10px/1 Inter,
     sans-serif;
   letter-spacing: 0.12em;
 }
 .turnHeader strong {
   font:
-    750 14px/1.1 Sora,
+    750 17px/1.1 Sora,
     sans-serif;
   letter-spacing: -0.03em;
 }
@@ -48,13 +48,13 @@
 }
 .dice b {
   color: #ffcd4a;
-  font-size: 13px;
+  font-size: 16px;
 }
 .phase {
   margin: 0 3px 6px;
   color: rgba(247, 248, 252, 0.55);
   font:
-    600 9px/1 Inter,
+    600 11px/1 Inter,
     sans-serif;
 }
 .players {
@@ -71,8 +71,8 @@
   grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 7px;
-  min-height: 43px;
-  padding: 4px 8px 4px 4px;
+  min-height: 50px;
+  padding: 5px 9px 5px 7px;
   text-align: left;
   color: #f7f8fc;
   border: 1px solid transparent;
@@ -81,7 +81,8 @@
   cursor: pointer;
 }
 .player {
-  opacity: 0.72;
+  opacity: 0.82;
+  box-shadow: inset 3px 0 var(--piece, transparent);
 }
 .player:hover,
 .player[aria-pressed='true'] {
@@ -92,7 +93,7 @@
   opacity: 1;
   border-color: rgba(31, 200, 196, 0.22);
   background: linear-gradient(90deg, rgba(31, 200, 196, 0.13), rgba(247, 248, 252, 0.04));
-  box-shadow: inset 2px 0 #1fc8c4;
+  box-shadow: inset 4px 0 var(--piece, #1fc8c4);
 }
 .playerIdentity {
   min-width: 0;
@@ -104,7 +105,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   font:
-    700 10px/1 Inter,
+    700 13px/1.1 Inter,
     sans-serif;
 }
 .playerIdentity small {
@@ -113,7 +114,7 @@
   white-space: nowrap;
   color: rgba(247, 248, 252, 0.48);
   font:
-    650 7px/1 Inter,
+    650 9px/1.1 Inter,
     sans-serif;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -124,21 +125,34 @@
   gap: 2px;
   color: #ffcd4a;
   font:
-    800 12px/1 Sora,
+    800 17px/1 Sora,
     sans-serif;
 }
 .score small {
-  color: rgba(247, 248, 252, 0.5);
+  color: rgba(247, 248, 252, 0.6);
   font:
-    700 7px/1 Inter,
+    700 9px/1 Inter,
     sans-serif;
+}
+.meta {
+  color: rgba(247, 248, 252, 0.7);
+  font:
+    600 10px/1.1 Inter,
+    sans-serif;
+}
+.meta b {
+  color: #f7f8fc;
+  font-weight: 800;
+}
+.meta b[data-warn='true'] {
+  color: #ff8a7f;
 }
 .pieceDot {
   position: absolute;
-  right: 5px;
-  bottom: 5px;
-  width: 6px;
-  height: 6px;
+  right: 6px;
+  bottom: 6px;
+  width: 9px;
+  height: 9px;
   border: 1px solid rgba(255, 255, 255, 0.75);
   border-radius: 50%;
 }

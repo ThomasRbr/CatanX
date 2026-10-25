@@ -29,14 +29,21 @@ interface ProductionToken3DProps {
  * and occluded like everything else. The face yaws to follow the camera so the
  * numerals always read upright, and the whole chit grows a little when zoomed
  * out so it never shrinks below a readable size on screen.
+ *
+ * Readability comes first on a strategy board, so two things bend realism:
+ * the chit leans toward the camera (a flat disc at the 42° board pitch reads
+ * as a squashed ellipse), and a ghost pass draws the parts hidden behind a
+ * canopy or a summit, so a number is never lost behind decor.
  */
 
 const TOKEN_RADIUS = 0.165;
 const TOKEN_THICKNESS = 0.034;
 const FACE_RADIUS = TOKEN_RADIUS - 0.007;
 /** Minimum on-screen diameter, in CSS pixels, before chits start to grow. */
-const MIN_SCREEN_DIAMETER = 38;
-const MAX_ZOOM_GROWTH = 1.7;
+const MIN_SCREEN_DIAMETER = 50;
+const MAX_ZOOM_GROWTH = 2.1;
+/** Lean toward the camera, in radians. */
+const TOKEN_TILT = 0.52;
 
 const bodyGeo = new THREE.CylinderGeometry(TOKEN_RADIUS, TOKEN_RADIUS + 0.006, TOKEN_THICKNESS, 48);
 // Bevelled foot so the chit reads as turned wood, not a coin.
@@ -149,6 +156,19 @@ function numeralAtlas(): THREE.CanvasTexture {
   return texture;
 }
 
+function remapAtlasUv(shader: THREE.WebGLProgramParametersWithUniforms) {
+  shader.vertexShader = shader.vertexShader
+    .replace('#include <common>', '#include <common>\nattribute vec2 aCell;')
+    .replace(
+      '#include <uv_vertex>',
+      `#include <uv_vertex>
+#ifdef USE_MAP
+  // Inset slightly so mip filtering never samples the neighbouring cell.
+  vMapUv = aCell + (vMapUv - 0.5) * (${(1 / ATLAS_GRID).toFixed(4)} * 0.985) + ${(0.5 / ATLAS_GRID).toFixed(4)};
+#endif`,
+    );
+}
+
 let faceMaterial: THREE.MeshStandardMaterial | null = null;
 
 function numeralFaceMaterial(): THREE.MeshStandardMaterial {
@@ -162,26 +182,44 @@ function numeralFaceMaterial(): THREE.MeshStandardMaterial {
     polygonOffsetUnits: -2,
   });
   material.onBeforeCompile = (shader) => {
-    shader.vertexShader = shader.vertexShader
-      .replace('#include <common>', '#include <common>\nattribute vec2 aCell;')
-      .replace(
-        '#include <uv_vertex>',
-        `#include <uv_vertex>
-#ifdef USE_MAP
-  // Inset slightly so mip filtering never samples the neighbouring cell.
-  vMapUv = aCell + (vMapUv - 0.5) * (${(1 / ATLAS_GRID).toFixed(4)} * 0.985) + ${(0.5 / ATLAS_GRID).toFixed(4)};
-#endif`,
-      );
-    // A touch of self-light keeps the numerals legible on the shaded side of a
-    // mountain without making the chit glow in full sun.
+    remapAtlasUv(shader);
+    // Self-light keeps the numerals legible on the shaded side of a mountain
+    // and under the evening grade without making the chit glow in full sun.
     shader.fragmentShader = shader.fragmentShader.replace(
       '#include <emissivemap_fragment>',
-      '#include <emissivemap_fragment>\n  totalEmissiveRadiance += diffuseColor.rgb * 0.16;',
+      '#include <emissivemap_fragment>\n  totalEmissiveRadiance += diffuseColor.rgb * 0.28;',
     );
   };
-  material.customProgramCacheKey = () => 'catanx-token-face-v1';
+  material.customProgramCacheKey = () => 'catanx-token-face-v2';
   faceMaterial = material;
   return material;
+}
+
+/**
+ * X-ray pass: only fragments *behind* something already drawn survive
+ * (`GreaterDepth`), so a chit hidden by a canopy or a summit shows through as
+ * a soft ghost while its visible part stays the lit, physical object.
+ */
+let ghostFaceMaterial: THREE.MeshBasicMaterial | null = null;
+
+/** Face only: the printed face already carries its own parchment disc. */
+function ghostMaterial(): THREE.MeshBasicMaterial {
+  if (!ghostFaceMaterial) {
+    ghostFaceMaterial = new THREE.MeshBasicMaterial({
+      map: numeralAtlas(),
+      transparent: true,
+      opacity: 0.9,
+      depthWrite: false,
+      depthFunc: THREE.GreaterDepth,
+      polygonOffset: true,
+      polygonOffsetFactor: -2,
+      polygonOffsetUnits: -2,
+      toneMapped: false,
+    });
+    ghostFaceMaterial.onBeforeCompile = remapAtlasUv;
+    ghostFaceMaterial.customProgramCacheKey = () => 'catanx-token-ghost-v1';
+  }
+  return ghostFaceMaterial;
 }
 
 function noopRaycast() {
@@ -205,8 +243,15 @@ function restingHeight(sample: (x: number, z: number) => number, x: number, z: n
   return top + 0.006;
 }
 
-const _dummy = new THREE.Object3D();
 const _forward = new THREE.Vector3();
+const _matrix = new THREE.Matrix4();
+const _lean = new THREE.Quaternion();
+const _faceQuat = new THREE.Quaternion();
+const _flatFace = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
+const _euler = new THREE.Euler();
+const _offset = new THREE.Vector3();
+const _position = new THREE.Vector3();
+const _scale = new THREE.Vector3();
 
 function ProductionPulse({ placement }: { placement: TokenPlacement }) {
   const ringRef = useRef<THREE.Mesh>(null);
@@ -286,29 +331,41 @@ export function ProductionToken3D({
   const bodyRef = useRef<THREE.InstancedMesh>(null);
   const footRef = useRef<THREE.InstancedMesh>(null);
   const faceRef = useRef<THREE.InstancedMesh>(null);
+  const ghostFaceRef = useRef<THREE.InstancedMesh>(null);
   const lastPose = useRef({ yaw: Number.NaN, scale: Number.NaN });
 
   const writeMatrices = (yaw: number, scale: number) => {
     const body = bodyRef.current;
     const foot = footRef.current;
     const face = faceRef.current;
-    if (!body || !foot || !face) return;
+    const ghostFace = ghostFaceRef.current;
+    if (!body || !foot || !face || !ghostFace) return;
+    // Lean the chit about its camera-facing axis; the raised rim keeps the
+    // low edge from cutting into the slope.
+    _lean.setFromEuler(_euler.set(TOKEN_TILT, yaw, 0, 'YXZ'));
+    _faceQuat.copy(_lean).multiply(_flatFace);
+    _scale.setScalar(scale);
+    const rise = Math.sin(TOKEN_TILT) * (TOKEN_RADIUS + 0.016) * scale;
+    const place = (
+      mesh: THREE.InstancedMesh,
+      index: number,
+      p: TokenPlacement,
+      height: number,
+      rotation: THREE.Quaternion,
+    ) => {
+      _offset.set(0, height * scale, 0).applyQuaternion(_lean);
+      _position.set(p.x, p.y + rise, p.z).add(_offset);
+      _matrix.compose(_position, rotation, _scale);
+      mesh.setMatrixAt(index, _matrix);
+    };
     for (let i = 0; i < placements.length; i++) {
       const p = placements[i]!;
-      _dummy.rotation.set(0, 0, 0);
-      _dummy.scale.set(scale, scale, scale);
-      _dummy.position.set(p.x, p.y + 0.005 * scale, p.z);
-      _dummy.updateMatrix();
-      foot.setMatrixAt(i, _dummy.matrix);
-      _dummy.position.set(p.x, p.y + (0.008 + TOKEN_THICKNESS / 2) * scale, p.z);
-      _dummy.updateMatrix();
-      body.setMatrixAt(i, _dummy.matrix);
-      _dummy.position.set(p.x, p.y + (0.008 + TOKEN_THICKNESS + 0.0008) * scale, p.z);
-      _dummy.rotation.set(-Math.PI / 2, yaw, 0, 'YXZ');
-      _dummy.updateMatrix();
-      face.setMatrixAt(i, _dummy.matrix);
+      place(foot, i, p, 0.005, _lean);
+      place(body, i, p, 0.008 + TOKEN_THICKNESS / 2, _lean);
+      place(face, i, p, 0.008 + TOKEN_THICKNESS + 0.0008, _faceQuat);
+      place(ghostFace, i, p, 0.008 + TOKEN_THICKNESS + 0.0008, _faceQuat);
     }
-    for (const mesh of [body, foot, face]) {
+    for (const mesh of [body, foot, face, ghostFace]) {
       mesh.count = placements.length;
       mesh.instanceMatrix.needsUpdate = true;
       mesh.computeBoundingSphere();
@@ -341,6 +398,7 @@ export function ProductionToken3D({
   });
 
   const material = numeralFaceMaterial();
+  const ghost = ghostMaterial();
 
   if (placements.length === 0) return null;
 
@@ -368,6 +426,14 @@ export function ProductionToken3D({
         args={[faceGeo, material, placements.length]}
         receiveShadow
         raycast={noopRaycast}
+      />
+      {/* Drawn after the opaque scene so the depth test sees the occluders. */}
+      <instancedMesh
+        key={`ghost-face:${placements.length}`}
+        ref={ghostFaceRef}
+        args={[faceGeo, ghost, placements.length]}
+        raycast={noopRaycast}
+        renderOrder={21}
       />
       {rollToken &&
         activeRollTotal != null &&

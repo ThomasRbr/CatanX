@@ -175,7 +175,7 @@
       color-mix(in srgb, var(--season-accent) 15%, transparent),
       transparent 35%
     ),
-    linear-gradient(145deg, rgba(58, 33, 21, 0.99), rgba(19, 13, 11, 0.99));
+    linear-gradient(160deg, rgba(16, 36, 62, 0.99), rgba(8, 18, 34, 0.99));
   color: #fff4df;
   box-shadow:
     0 24px 52px rgba(5, 2, 1, 0.56),

@@ -37,6 +37,8 @@ interface HexTerrainProps {
   onTileClick: (tileId: string) => void;
   onTileHover: (tileId: string | null) => void;
   softBiomeTransitions?: boolean;
+  /** Flat outline rings; the relief board draws draped ones instead. */
+  flatEmphasis?: boolean;
 }
 
 function seasonalTerrainTint(season: string, terrain: TerrainType): { color: string; strength: number } {
@@ -292,6 +294,7 @@ export function HexTerrain({
   onTileClick,
   onTileHover,
   softBiomeTransitions = false,
+  flatEmphasis = true,
 }: HexTerrainProps) {
   const pointerDown = useRef<{ x: number; y: number; tileId: string } | null>(null);
   const lod = useMapLod();
@@ -404,13 +407,14 @@ export function HexTerrain({
 
   /** Emphasis rings only (grid is a single LineSegments). */
   const emphasisTiles = useMemo(() => {
+    if (!flatEmphasis) return [];
     return tiles.filter(
       (tile) =>
         tile.id === selectedTile ||
         tile.id === hoveredTile ||
         highlightedTiles.has(tile.id),
     );
-  }, [highlightedTiles, hoveredTile, selectedTile, tiles]);
+  }, [flatEmphasis, highlightedTiles, hoveredTile, selectedTile, tiles]);
 
   const noopRaycast = useMemo(() => {
     return (_raycaster: THREE.Raycaster, _intersects: THREE.Intersection[]) => {

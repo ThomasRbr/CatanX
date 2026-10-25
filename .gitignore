@@ -25,3 +25,4 @@ apps/server/data/rooms/*.json
 # Python
 __pycache__/
 *.pyc
+.shots/

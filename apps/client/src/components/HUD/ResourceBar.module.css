@@ -15,7 +15,43 @@
   display: flex;
   flex-wrap: nowrap;
   justify-content: flex-end;
-  gap: 5px;
+  align-items: stretch;
+  gap: 6px;
+  padding: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 12% 0%, rgba(31, 200, 196, 0.16), transparent 42%),
+    linear-gradient(160deg, rgba(16, 36, 62, 0.94), rgba(8, 18, 34, 0.9));
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    0 12px 28px rgba(2, 8, 20, 0.36);
+  backdrop-filter: blur(14px) saturate(125%);
+}
+
+.handTotal {
+  min-width: 44px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 2px;
+  padding: 0 6px 0 2px;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
+  color: #f7f8fc;
+}
+
+.handTotal strong {
+  font-family: 'Sora', 'Inter', sans-serif;
+  font-size: 22px;
+  line-height: 1;
+}
+
+.handTotal small {
+  color: rgba(247, 248, 252, 0.66);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 .commodityShelf {
@@ -28,7 +64,7 @@
   border-radius: 13px;
   background:
     radial-gradient(circle at 12% 0%, rgba(255, 210, 120, .12), transparent 37%),
-    linear-gradient(145deg, rgba(38, 24, 16, 0.9), rgba(12, 9, 8, 0.84));
+    linear-gradient(160deg, rgba(16, 36, 62, 0.92), rgba(8, 18, 34, 0.88));
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.09),
     0 9px 22px rgba(4, 3, 2, 0.27);
@@ -212,9 +248,9 @@
 .chip {
   position: relative;
   isolation: isolate;
-  min-width: 62px;
-  height: 42px;
-  padding: 4px 6px 4px 4px;
+  width: 62px;
+  height: 74px;
+  padding: 6px 4px 5px;
   overflow: hidden;
   border-radius: 9px;
   border: 1px solid rgba(255, 225, 169, 0.28);
@@ -224,15 +260,23 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
     0 5px 12px rgba(0, 0, 0, 0.24);
   display: grid;
-  grid-template-columns: 27px auto;
-  align-items: center;
+  grid-template-rows: 34px auto;
+  justify-items: center;
+  align-content: center;
   gap: 5px;
   white-space: nowrap;
   font-size: 11px;
   font-weight: 800;
   transition:
     transform var(--motion-feedback) ease,
-    border-color var(--motion-feedback) ease;
+    border-color var(--motion-feedback) ease,
+    opacity var(--motion-feedback) ease,
+    filter var(--motion-feedback) ease;
+}
+
+.chip[data-empty='true'] {
+  opacity: 0.5;
+  filter: saturate(0.45);
 }
 
 .chip::before {
@@ -250,8 +294,8 @@
 }
 
 .cardArt {
-  width: 27px;
-  height: 31px;
+  width: 34px;
+  height: 34px;
   display: grid;
   place-items: center;
   border-radius: 6px;
@@ -262,20 +306,22 @@
 }
 
 .label {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
+  max-width: 100%;
   overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
+  text-overflow: ellipsis;
+  color: rgba(255, 250, 238, 0.92);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
 }
 
 .amount {
-  min-width: 21px;
-  height: 21px;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 4px;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -429,12 +475,19 @@
     max-width: calc(100vw - 24px);
   }
   .chip {
-    min-width: 55px;
-    grid-template-columns: 25px auto;
+    width: 50px;
+    height: 58px;
+    grid-template-rows: 28px auto;
   }
   .cardArt {
-    width: 25px;
-    height: 29px;
+    width: 28px;
+    height: 28px;
+  }
+  .label {
+    font-size: 8px;
+  }
+  .handTotal {
+    display: none;
   }
 
   .commodityShelf {

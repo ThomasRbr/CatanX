@@ -129,6 +129,17 @@ import {
   updateRemotePlayerId,
 } from './network/remoteSession';
 
+const CATAN_HAND_KEYS = ['wood', 'clay', 'sheep', 'wheat', 'ore'] as const;
+
+/** Cards in hand among the five Catan resources; redacted hands use the public count. */
+function catanHandSize(player: {
+  resources: Partial<Record<(typeof CATAN_HAND_KEYS)[number], number>>;
+  publicResourceCount?: number;
+}): number {
+  const total = CATAN_HAND_KEYS.reduce((sum, key) => sum + Math.floor(player.resources[key] ?? 0), 0);
+  return total === 0 && typeof player.publicResourceCount === 'number' ? player.publicResourceCount : total;
+}
+
 export function App() {
   const gameState = useGameStore((s) => s.gameState);
   const currentPlayerId = useGameStore((s) => s.currentPlayerId);
@@ -859,12 +870,11 @@ export function App() {
         civilization: player.civilization,
         profile: player.profile,
         type: player.type,
-        ...(classic || ck
-          ? {
-              handSize: getPublicResourceCount(player, gameState),
-              devCardCount: ck ? 0 : getPublicDevCardCount(player),
-            }
-          : {}),
+        // Hand size matters in every mode: it is what a 7 punishes. Outside
+        // classic / C&K the bundle also carries CatanX economy keys (coins,
+        // food…), so count only the five cards the resource bar shows.
+        handSize: classic || ck ? getPublicResourceCount(player, gameState) : catanHandSize(player),
+        ...(classic || ck ? { devCardCount: ck ? 0 : getPublicDevCardCount(player) } : {}),
       }));
   }, [activePlayerId, gameState]);
 
@@ -932,6 +942,18 @@ export function App() {
     return robberTargetTiles;
   }, [gameState, robberTargetTiles]);
 
+  // The robber moves by clicking the board, so its legal tiles must glow there.
+  const boardHighlightedTiles = useMemo(
+    () =>
+      robberMoveTiles.length > 0 && canControlActivePlayer
+        ? robberMoveTiles
+            // Bare coast produces nothing: outlining it only clutters the sea.
+            .filter((tile) => tile.terrain !== 'coast' || typeof tile.diceValue === 'number')
+            .map((tile) => tile.id)
+        : highlightedTiles,
+    [canControlActivePlayer, highlightedTiles, robberMoveTiles],
+  );
+
   const stealCandidates = useMemo(() => {
     if (!gameState?.sevenFlow || gameState.turnPhase !== 'steal_resource') return [];
     return gameState.sevenFlow.stealCandidates
@@ -976,11 +998,16 @@ export function App() {
       if (event.key !== 'Escape') return;
       if (classicBuildMode) {
         clearClassicBuildMode();
+        return;
       }
+      // Modals own their Escape; otherwise it closes the open side panel
+      // (Constructions, Commerce…) and gives the board back.
+      if (activeModal) return;
+      if (sidePanelTab !== 'tile') setSidePanelTab('tile');
     };
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
-  }, [classicBuildMode, clearClassicBuildMode]);
+  }, [activeModal, classicBuildMode, clearClassicBuildMode, setSidePanelTab, sidePanelTab]);
 
   useEffect(() => {
     if (!classicBuildMode) return;
@@ -2065,7 +2092,7 @@ export function App() {
           <LazyMapBoard
             gameState={gameState}
             selectedTile={selectedTileId}
-            highlightedTiles={highlightedTiles}
+            highlightedTiles={boardHighlightedTiles}
             currentPlayerId={displayPlayerId ?? currentPlayerId}
             showGrid={showGrid}
             showAnimations={effectiveShowAnimations}

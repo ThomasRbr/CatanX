@@ -54,6 +54,15 @@ const TERRAIN_MACRO_ELEVATION: Partial<Record<TerrainType, number>> = {
 };
 
 const WATER_TERRAINS = new Set<TerrainType>(['ocean', 'coast', 'river', 'lake']);
+/**
+ * Relative height the land is pulled toward at the waterline. Raised biomes
+ * (glacier 0.3, mountain 0.36) otherwise kept full height right up to the hex
+ * edge, so the shore skirt dropped from a plateau: a dark vertical wall with a
+ * crisp hexagonal rim — the "box" look of edge glaciers and coastal ranges.
+ */
+const SHORE_ELEVATION = -0.06;
+/** Shore samples pull harder than one land tile so edges reach beach height. */
+const SHORE_WEIGHT = 1.5;
 const WATER_HEIGHT = -0.08;
 
 function inverseYaw(dx: number, dz: number, yaw: number): { x: number; z: number } {
@@ -139,6 +148,26 @@ function distanceToSegmentSq(
   return { distanceSq: dx * dx + dz * dz, lateral, t };
 }
 
+function shoreSamplesFor(landTiles: readonly HeightfieldTile[]): Array<{ x: number; z: number }> {
+  const key = (x: number, z: number) => `${Math.round(x * 100)}:${Math.round(z * 100)}`;
+  const land = new Set(landTiles.map((tile) => key(tile.x, tile.z)));
+  const seen = new Set<string>();
+  const out: Array<{ x: number; z: number }> = [];
+  const step = Math.sqrt(3) * HEX_WORLD_RADIUS;
+  for (const tile of landTiles) {
+    for (let i = 0; i < 6; i++) {
+      const angle = (Math.PI / 3) * i;
+      const x = tile.x + Math.cos(angle) * step;
+      const z = tile.z + Math.sin(angle) * step;
+      const id = key(x, z);
+      if (land.has(id) || seen.has(id)) continue;
+      seen.add(id);
+      out.push({ x, z });
+    }
+  }
+  return out;
+}
+
 /**
  * Deterministic, visual-only heightfield. It samples the exact same relief
  * function and per-tile rotation as the rendered slabs; rules and hitboxes are
@@ -148,6 +177,8 @@ export class BoardHeightfield implements SurfaceHeightSampler {
   private readonly tiles: HeightfieldTile[];
   private readonly landTiles: HeightfieldTile[];
   private readonly alpineTiles: HeightfieldTile[];
+  /** Centres of water / off-map cells that touch land. */
+  private readonly shoreSamples: Array<{ x: number; z: number }>;
   private readonly byId: Map<string, HeightfieldTile>;
   private readonly phase: number;
   private roadCarves: readonly RoadCarveSegment[] = [];
@@ -168,6 +199,7 @@ export class BoardHeightfield implements SurfaceHeightSampler {
     this.alpineTiles = this.tiles.filter(
       (tile) => tile.terrain === 'mountain' || tile.terrain === 'goldmine' || tile.terrain === 'glacier',
     );
+    this.shoreSamples = shoreSamplesFor(this.landTiles);
     this.phase = (hashString(this.tiles.map((tile) => tile.id).sort().join('|')) % 8192) / 8192 * Math.PI * 2;
     this.roadCarves = roadCarves;
   }
@@ -384,6 +416,15 @@ export class BoardHeightfield implements SurfaceHeightSampler {
       totalWeight += weight;
     }
     if (totalWeight <= 0.0001) return HEX_SLAB_THICKNESS - this.roadCarveAmount(x, z);
+    for (const shore of this.shoreSamples) {
+      const dx = x - shore.x;
+      const dz = z - shore.z;
+      const distanceSq = dx * dx + dz * dz;
+      if (distanceSq > 4.8) continue;
+      const weight = Math.exp(-distanceSq / 0.62) * SHORE_WEIGHT;
+      totalHeight += SHORE_ELEVATION * weight;
+      totalWeight += weight;
+    }
     let massif = 0;
     for (const tile of this.alpineTiles) {
       const ddx = x - tile.x;

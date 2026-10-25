@@ -214,12 +214,14 @@ function NaturalRoadMesh({
     () => naturalRoadGeometry(ax, az, bx, bz, surface, 0.022, 0.026, 0.001, 0.012),
     [ax, az, bx, bz, surface],
   );
+  // Ownership must read at board zoom: 3 mm threads vanished, so each road
+  // carries two painted kerbs in the owner's colour.
   const leftMarker = useMemo(
-    () => naturalRoadGeometry(ax, az, bx, bz, surface, 0.0032, -0.058, 0.004, 0.010),
+    () => naturalRoadGeometry(ax, az, bx, bz, surface, 0.022, -0.056, 0.007, 0.010),
     [ax, az, bx, bz, surface],
   );
   const rightMarker = useMemo(
-    () => naturalRoadGeometry(ax, az, bx, bz, surface, 0.0032, 0.058, 0.004, 0.010),
+    () => naturalRoadGeometry(ax, az, bx, bz, surface, 0.022, 0.056, 0.007, 0.010),
     [ax, az, bx, bz, surface],
   );
   const albedo = loadAuthoredTexture(roadTexture('albedo'), quality.textureTier);
@@ -315,11 +317,12 @@ function NaturalRoadMesh({
           <meshStandardMaterial
             color={color}
             emissive={color}
-            emissiveIntensity={0.01}
-            roughness={0.78}
+            emissiveIntensity={0.32}
+            roughness={0.62}
             metalness={0.02}
-            transparent
-            opacity={0.55}
+            polygonOffset
+            polygonOffsetFactor={-4}
+            polygonOffsetUnits={-4}
           />
         </mesh>
       ))}
@@ -591,6 +594,34 @@ function RoadWeatherOverlay({
   opacity: number;
   roadType: RoadSegment['type'];
 }) {
+  const surface = useSurfaceHeight();
+  // Rain sheen / snow dusting lie on the road bed. The old fixed-height box
+  // floated as a white causeway over valleys and sank into hills.
+  const draped = useMemo(
+    () =>
+      roadType === 'bridge'
+        ? null
+        : naturalRoadGeometry(ax, az, bx, bz, surface, 0.11, 0, 0.006, 0.012),
+    [ax, az, bx, bz, roadType, surface],
+  );
+  useEffect(() => () => draped?.dispose(), [draped]);
+  if (draped) {
+    return (
+      <mesh geometry={draped} raycast={() => undefined} renderOrder={7}>
+        <meshStandardMaterial
+          color={color}
+          transparent
+          opacity={opacity}
+          roughness={0.98}
+          metalness={0}
+          depthWrite={false}
+          polygonOffset
+          polygonOffsetFactor={-4}
+          polygonOffsetUnits={-4}
+        />
+      </mesh>
+    );
+  }
   const y = roadYForType(roadType) + 0.072;
   const a = { x: ax, y, z: az };
   const b = { x: bx, y, z: bz };

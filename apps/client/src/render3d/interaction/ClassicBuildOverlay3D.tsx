@@ -1,17 +1,17 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import type { ThreeEvent } from '@react-three/fiber';
-import * as THREE from 'three';
+import { useEffect, useMemo, useState } from 'react';
 import type { CatanTopology, GameState } from '@catanx/engine';
 import type { ClassicBuildMode } from '../../store/uiStore';
-import { HEX_SLAB_THICKNESS } from '../utils/createHexGeometry';
 import { playerColor } from '../utils/playerColors';
-import { ROAD_PREVIEW_Y } from '../utils/resolveRoads';
-import {
-  intersectionToWorld,
-  midpointWorld,
-  yawBetween,
-} from '../utils/topologyToWorld';
 import { PlacementHitReporter, type PlacementHitTarget } from './PlacementHitReporter';
+import {
+  edgeMarkerY,
+  EdgeMarker,
+  GroundRing,
+  NodeMarker,
+  nodeMarkerY,
+  useSurfaceY,
+  type MarkerAccent,
+} from './placementMarkers';
 
 export interface ClassicBuildOverlay3DProps {
   gameState: GameState;
@@ -22,172 +22,6 @@ export interface ClassicBuildOverlay3DProps {
   enabled: boolean;
   onIntersectionClick?: (intersectionId: string) => void;
   onEdgeClick?: (edgeId: string) => void;
-}
-
-const DRAG_SLOP_SQ = 10 * 10;
-const VIS_NODE = 0.085;
-const HIT_NODE = 0.26;
-const VIS_EDGE_W = 0.1;
-const HIT_EDGE_W = 0.3;
-
-function usePlacementClick(enabled: boolean, onFire: () => void) {
-  const pointerDown = useRef<{ x: number; y: number } | null>(null);
-
-  return {
-    onPointerDown: (e: ThreeEvent<PointerEvent>) => {
-      if (!enabled || e.button !== 0) return;
-      e.stopPropagation();
-      pointerDown.current = { x: e.clientX, y: e.clientY };
-    },
-    onPointerUp: (e: ThreeEvent<PointerEvent>) => {
-      if (!enabled || e.button !== 0) return;
-      e.stopPropagation();
-      const down = pointerDown.current;
-      pointerDown.current = null;
-      if (!down) return;
-      const dx = e.clientX - down.x;
-      const dy = e.clientY - down.y;
-      if (dx * dx + dy * dy > DRAG_SLOP_SQ) return;
-      onFire();
-    },
-  };
-}
-
-function SettlementCandidate({
-  intersectionId,
-  x,
-  y,
-  z,
-  hovered,
-  enabled,
-  accent,
-  onClick,
-  onHover,
-}: {
-  intersectionId: string;
-  x: number;
-  y: number;
-  z: number;
-  hovered: boolean;
-  enabled: boolean;
-  accent: 'settle' | 'city' | 'knight';
-  onClick: () => void;
-  onHover: (id: string | null) => void;
-}) {
-  const handlers = usePlacementClick(enabled, onClick);
-  const scale = hovered ? 1.1 : 1;
-  const color =
-    accent === 'city'
-      ? hovered
-        ? '#fbbf24'
-        : '#f59e0b'
-      : accent === 'knight'
-        ? hovered
-          ? '#7ef0e6'
-          : '#48d9cf'
-        : hovered
-          ? '#86efac'
-          : '#7dd3b0';
-  const emissive =
-    accent === 'city' ? '#92400e' : accent === 'knight' ? '#0d6b66' : '#1f6b4e';
-
-  return (
-    <group position={[x, y, z]}>
-      <mesh
-        scale={[scale, scale, scale]}
-        visible={false}
-        userData={{ kind: 'intersection', id: intersectionId }}
-        {...handlers}
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          document.body.style.cursor = 'pointer';
-          onHover(intersectionId);
-        }}
-        onPointerOut={() => {
-          document.body.style.cursor = '';
-          onHover(null);
-        }}
-      >
-        <sphereGeometry args={[HIT_NODE, 12, 10]} />
-        <meshBasicMaterial />
-      </mesh>
-      <mesh scale={[scale, scale, scale]} raycast={() => undefined} castShadow>
-        <sphereGeometry args={[VIS_NODE * (accent === 'city' ? 1.15 : 1), 12, 10]} />
-        <meshStandardMaterial
-          color={color}
-          emissive={emissive}
-          emissiveIntensity={hovered ? 0.22 : 0.1}
-          roughness={0.55}
-          metalness={0.08}
-          flatShading
-          transparent
-          opacity={hovered ? 0.9 : 0.75}
-          depthWrite={false}
-          polygonOffset
-          polygonOffsetFactor={-1}
-        />
-      </mesh>
-    </group>
-  );
-}
-
-function EdgeCandidate({
-  edgeId,
-  mid,
-  len,
-  yaw,
-  hovered,
-  enabled,
-  onClick,
-  onHover,
-}: {
-  edgeId: string;
-  mid: { x: number; y: number; z: number };
-  len: number;
-  yaw: number;
-  hovered: boolean;
-  enabled: boolean;
-  onClick: () => void;
-  onHover: (id: string | null) => void;
-}) {
-  const handlers = usePlacementClick(enabled, onClick);
-
-  return (
-    <group position={[mid.x, mid.y, mid.z]} rotation={[0, yaw, 0]}>
-      <mesh
-        visible={false}
-        userData={{ kind: 'edge', id: edgeId }}
-        {...handlers}
-        onPointerOver={(e) => {
-          e.stopPropagation();
-          document.body.style.cursor = 'pointer';
-          onHover(edgeId);
-        }}
-        onPointerOut={() => {
-          document.body.style.cursor = '';
-          onHover(null);
-        }}
-      >
-        <boxGeometry args={[HIT_EDGE_W, 0.12, len]} />
-        <meshBasicMaterial />
-      </mesh>
-      <mesh raycast={() => undefined} renderOrder={6}>
-        <boxGeometry args={[hovered ? VIS_EDGE_W * 1.35 : VIS_EDGE_W, 0.07, len]} />
-        <meshStandardMaterial
-          color={hovered ? '#86efac' : '#6ee7b7'}
-          emissive="#2a8a60"
-          emissiveIntensity={hovered ? 0.32 : 0.22}
-          roughness={0.55}
-          metalness={0.08}
-          flatShading
-          depthWrite
-          polygonOffset
-          polygonOffsetFactor={-4}
-          polygonOffsetUnits={-4}
-        />
-      </mesh>
-    </group>
-  );
 }
 
 /**
@@ -208,6 +42,7 @@ export function ClassicBuildOverlay3D({
     () => new Set(validIntersectionIds),
     [validIntersectionIds],
   );
+  const sample = useSurfaceY();
 
   useEffect(() => {
     return () => {
@@ -228,28 +63,34 @@ export function ClassicBuildOverlay3D({
         const a = topology.intersections[edge.a];
         const b = topology.intersections[edge.b];
         if (!a || !b) continue;
-        const mid = midpointWorld(
-          intersectionToWorld(a),
-          intersectionToWorld(b),
-          ROAD_PREVIEW_Y,
-        );
-        out.push({ id: edgeId, kind: 'edge', ...mid });
+        const pa = { x: a.x, z: a.y };
+        const pb = { x: b.x, z: b.y };
+        out.push({
+          id: edgeId,
+          kind: 'edge',
+          x: (pa.x + pb.x) / 2,
+          y: edgeMarkerY(sample, pa, pb),
+          z: (pa.z + pb.z) / 2,
+        });
       }
       return out;
     }
     for (const intersectionId of validIntersectionIds) {
       const intersection = topology.intersections[intersectionId];
       if (!intersection) continue;
-      const w = intersectionToWorld(intersection, HEX_SLAB_THICKNESS + 0.08);
-      out.push({ id: intersectionId, kind: 'intersection', ...w });
+      const x = intersection.x;
+      const z = intersection.y;
+      out.push({ id: intersectionId, kind: 'intersection', x, y: nodeMarkerY(sample, x, z), z });
     }
     return out;
-  }, [mode, topology, validEdgeIds, validIntersectionIds]);
+  }, [mode, sample, topology, validEdgeIds, validIntersectionIds]);
 
   const occupiedEntries = useMemo(
     () => Object.entries(gameState.classicBoard?.occupiedIntersections ?? {}),
     [gameState.classicBoard?.occupiedIntersections],
   );
+
+  const accent: MarkerAccent = mode === 'city' ? 'city' : mode === 'ck_knight' ? 'knight' : 'settle';
 
   return (
     <group>
@@ -259,19 +100,15 @@ export function ClassicBuildOverlay3D({
         validIntersectionIds.map((intersectionId) => {
           const intersection = topology.intersections[intersectionId];
           if (!intersection) return null;
-          const w = intersectionToWorld(intersection, HEX_SLAB_THICKNESS + 0.08);
           return (
-            <SettlementCandidate
+            <NodeMarker
               key={intersectionId}
-              intersectionId={intersectionId}
-              x={w.x}
-              y={w.y}
-              z={w.z}
-              hovered={hoveredId === intersectionId}
+              id={intersectionId}
+              x={intersection.x}
+              z={intersection.y}
+              state={hoveredId === intersectionId ? 'hover' : 'idle'}
+              accent={accent}
               enabled={enabled}
-              accent={
-                mode === 'city' ? 'city' : mode === 'ck_knight' ? 'knight' : 'settle'
-              }
               onClick={() => onIntersectionClick?.(intersectionId)}
               onHover={setHoveredId}
             />
@@ -285,18 +122,13 @@ export function ClassicBuildOverlay3D({
           const a = topology.intersections[edge.a];
           const b = topology.intersections[edge.b];
           if (!a || !b) return null;
-          const wa = intersectionToWorld(a);
-          const wb = intersectionToWorld(b);
-          const mid = midpointWorld(wa, wb, ROAD_PREVIEW_Y);
-          const len = Math.hypot(wb.x - wa.x, wb.z - wa.z);
           return (
-            <EdgeCandidate
+            <EdgeMarker
               key={edgeId}
-              edgeId={edgeId}
-              mid={mid}
-              len={Math.max(0.2, len * 0.92)}
-              yaw={yawBetween(wa, wb)}
-              hovered={hoveredId === edgeId}
+              id={edgeId}
+              a={{ x: a.x, z: a.y }}
+              b={{ x: b.x, z: b.y }}
+              state={hoveredId === edgeId ? 'hover' : 'idle'}
               enabled={enabled}
               onClick={() => onEdgeClick?.(edgeId)}
               onHover={setHoveredId}
@@ -308,22 +140,15 @@ export function ClassicBuildOverlay3D({
         if (validIntersectionSet.has(intersectionId)) return null;
         const intersection = topology.intersections[intersectionId];
         if (!intersection) return null;
-        const w = intersectionToWorld(intersection, HEX_SLAB_THICKNESS + 0.015);
         const owner = gameState.players.get(ownerId);
-        const color = owner ? playerColor(owner.color) : '#888888';
         return (
-          <group key={`occ-${intersectionId}`} position={[w.x, w.y, w.z]}>
-            <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]} raycast={() => undefined}>
-              <ringGeometry args={[0.14, 0.18, 20]} />
-              <meshBasicMaterial
-                color={color}
-                transparent
-                opacity={0.55}
-                side={THREE.DoubleSide}
-                depthWrite={false}
-              />
-            </mesh>
-          </group>
+          <GroundRing
+            key={`occ-${intersectionId}`}
+            x={intersection.x}
+            z={intersection.y}
+            color={owner ? playerColor(owner.color) : '#888888'}
+            opacity={0.55}
+          />
         );
       })}
     </group>

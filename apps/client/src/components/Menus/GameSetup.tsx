@@ -144,7 +144,8 @@ export function GameSetup({ onStart, onBack, onOpenCivModal, civSelections }: Ga
     } else if (preset === 'catanx') {
       setMapSize('medium');
       setVictoryTarget(15);
-      setFogOfWar(true);
+      // Le brouillard masque presque toute l'île : option à cocher, pas un défaut.
+      setFogOfWar(false);
       setEnableEvents(true);
       setEnableSeasons(true);
       setEnableDiplomacy(true);
@@ -706,7 +707,7 @@ export function GameSetup({ onStart, onBack, onOpenCivModal, civSelections }: Ga
                   </label>
                 </div>
 
-                <h3 className={styles.summaryTitle} style={{ marginTop: 18 }}>
+                <h3 className={styles.sectionTitle} style={{ marginTop: 18 }}>
                   Extensions
                 </h3>
                 <div className={styles.checkList} style={{ marginTop: 8 }}>

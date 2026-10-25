@@ -10,6 +10,7 @@ import { cubeToWorld, HEX_WORLD_RADIUS } from '../utils/hexToWorld';
 import { edgeOffset } from '../utils/hexEdges';
 import { shouldAnimateDecor } from '../utils/mapLod';
 import { shouldCastDecorShadows } from '../utils/perfBudgets';
+import { useSurfaceHeight } from '../terrain/SurfaceHeightContext';
 
 interface Robber3DProps {
   gameState: GameState;
@@ -32,6 +33,7 @@ export function Robber3D({ gameState, animate = true }: Robber3DProps) {
   const moveStartRef = useRef<number | null>(null);
   const initializedRef = useRef(false);
 
+  const surface = useSurfaceHeight();
   const pos = useMemo(() => {
     const tileId =
       gameState.robberPosition ??
@@ -44,10 +46,11 @@ export function Robber3D({ gameState, animate = true }: Robber3DProps) {
     const off = edgeOffset(0, HEX_WORLD_RADIUS * 0.32);
     return {
       x: c.x + off.x,
-      y: HEX_SLAB_THICKNESS + 0.03,
+      // Stand on the relief, not on the old flat slab (it sank into hills).
+      y: Math.max(surface.sampleHeight(c.x + off.x, c.z + off.z), HEX_SLAB_THICKNESS) + 0.03,
       z: c.z + off.z,
     };
-  }, [gameState.map, gameState.robberPosition]);
+  }, [gameState.map, gameState.robberPosition, surface]);
 
   useEffect(() => {
     if (!pos) return;

@@ -90,16 +90,21 @@ export function ResourceBar({
     return () => window.clearTimeout(timeout);
   }, [resources, materials]);
 
-  const entries = listHeldCatanResources(resources);
+  // The whole hand is always on screen: a missing chip reads as "no resource"
+  // only if the player already knows the five, and the empty hand at the start
+  // of a game used to hide the bar entirely.
+  const entries = CATAN_RESOURCES.map((key) => [key, resources[key] ?? 0] as const);
+  const handTotal = entries.reduce((sum, [, value]) => sum + Math.floor(value), 0);
   const commodityEntries = commodities ? listCkCommodityCounters(commodities) : [];
   const materialEntries = materials ? listUsMaterialCounters(materials) : [];
-  const hasHand =
-    entries.length > 0 || commodityEntries.length > 0 || materialEntries.length > 0;
-  if (!hasHand) return null;
 
   return (
     <div className={styles.bar} data-hud-zone="resources">
       <div className={styles.resourceCards} aria-label="Ressources en main">
+        <div className={styles.handTotal} aria-label={`${handTotal} cartes en main`}>
+          <strong>{handTotal}</strong>
+          <small>en main</small>
+        </div>
         {entries.map(([key, value]) => {
           const label = frResource(key);
           const icon = RESOURCE_ICONS[key as keyof ResourceBundle];
@@ -111,10 +116,11 @@ export function ResourceBar({
               <div
                 className={`${styles.chip} ${gained.has(key) ? styles.gained : ''}`}
                 data-resource={key}
+                data-empty={Math.floor(value) <= 0 ? 'true' : undefined}
                 aria-label={`${label} : ${Math.floor(value ?? 0)}`}
               >
                 <span className={styles.cardArt} aria-hidden="true">
-                  {icon && <Icon name={icon} size={18} title={label} />}
+                  {icon && <Icon name={icon} size={22} title={label} />}
                 </span>
                 <span className={styles.label}>{label}</span>
                 <strong className={styles.amount}>{Math.floor(value ?? 0)}</strong>

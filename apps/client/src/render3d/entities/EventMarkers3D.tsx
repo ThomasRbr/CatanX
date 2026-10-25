@@ -6,6 +6,7 @@ import type { Group } from 'three';
 import type { GameState } from '@catanx/engine';
 import { useAmbientAnimation } from '../fx/AmbientAnimationContext';
 import { HEX_SLAB_THICKNESS } from '../utils/createHexGeometry';
+import { useSurfaceHeight } from '../terrain/SurfaceHeightContext';
 import { cubeToWorld, HEX_WORLD_RADIUS } from '../utils/hexToWorld';
 import {
   EVENT_MARKER_COLOR,
@@ -109,8 +110,10 @@ function EventMarker({
   const phase = useMemo(() => Math.random() * Math.PI * 2, []);
   const color = EVENT_MARKER_COLOR[kind];
   const ambient = useAmbientAnimation();
-  const groundY = HEX_SLAB_THICKNESS + 0.035;
-  const gemY = HEX_SLAB_THICKNESS + 0.38;
+  const surface = useSurfaceHeight();
+  const ground = Math.max(surface.sampleHeight(x, z), HEX_SLAB_THICKNESS);
+  const groundY = ground + 0.035;
+  const gemY = ground + 0.38;
 
   useFrame(() => {
     if (!gem.current) return;
